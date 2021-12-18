@@ -1,12 +1,13 @@
-const express = require('express');
-const axios = require('axios');
-require('dotenv').config();
+const express = require("express");
+const axios = require("axios");
+const { crawlNewsProducer } = require("./crawl.producer");
+require("dotenv").config();
 
 const app = express();
 
 const crawlPost = async () => {
   try {
-    const categories = ['business', 'health', 'sports', 'science'];
+    const categories = ["business", "health", "sports", "science"];
 
     const postFollowCategory = await Promise.all(
       categories.map(async (category) => {
@@ -35,10 +36,11 @@ const crawlPost = async () => {
     );
 
     const postList = [].concat.apply([], postFollowCategory);
-    console.log(postList);
+    crawlNewsProducer(postList);
+    // console.log(postList);
   } catch (err) {
     return res.status(500).json({
-      status: 'Error',
+      status: "Error",
       message: err.message,
     });
   }
