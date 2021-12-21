@@ -5,6 +5,8 @@ const AppError = require('./../utils/appError');
 const { createHash } = require('crypto');
 require('dotenv').config();
 
+const { signupEvent } = require('./../kafka/auth.producer');
+
 // token generate sync
 const createToken = (userPayload) => {
   const token = jwt.sign(
@@ -45,6 +47,8 @@ const signup = async (req, res, next) => {
     //   'Register Success',
     //   'Thank you for registering. Visit my website.'
     // );
+
+    signupEvent(user);
 
     return res.status(201).json({
       status: 'Register Success',
