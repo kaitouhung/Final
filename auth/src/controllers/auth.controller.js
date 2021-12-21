@@ -40,11 +40,11 @@ const signup = async (req, res, next) => {
 
     const token = createToken(user);
 
-    await mailService.sendMailToUser(
-      user.email,
-      'Register Success',
-      'Thank you for registering. Visit my website.'
-    );
+    // await mailService.sendMailToUser(
+    //   user.email,
+    //   'Register Success',
+    //   'Thank you for registering. Visit my website.'
+    // );
 
     return res.status(201).json({
       status: 'Register Success',

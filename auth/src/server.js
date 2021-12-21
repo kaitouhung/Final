@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 
 const { connectMongo } = require('./config/mongodb');
 const { rootRouter } = require('./routes');
@@ -7,6 +8,8 @@ const AppError = require('./utils/appError');
 connectMongo();
 
 const app = express();
+
+app.use(cors());
 
 app.use(express.json());
 
