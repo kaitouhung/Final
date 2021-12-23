@@ -1,26 +1,39 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { Link as MuiLink } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
-import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
+import { unwrapResult } from '@reduxjs/toolkit';
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import Background from 'src/assets/img/login_register.jpg';
+import InputPassword from 'src/components/InputPassword/InputPassword';
 import InputText from 'src/components/InputText/InputText';
+import { path } from 'src/constants/path';
 import * as yup from 'yup';
+import { login } from '../auth.slice';
 
 export default function Login() {
   const schema = yup
     .object({
       email: yup
         .string()
+        .trim('Please enter your email')
         .required('Please enter your email.')
         .email('Please enter a valid email address.'),
-      // password: yup.string().required('Please enter your password'),
+      password: yup
+        .string()
+        .trim('Please enter your passowrd')
+        .required('Please enter your password')
+        .min(6, 'Please enter at least 6 character')
+        .max(160, 'Please enter lesser 160 character'),
     })
     .required();
 
@@ -28,19 +41,36 @@ export default function Login() {
     control,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm({
     defaultValues: {
       email: '',
+      password: '',
     },
     resolver: yupResolver(schema),
   });
 
-  const handleLogin = (data) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLogin = async (data) => {
     const body = {
       email: data.email,
+      password: data.password,
     };
 
-    console.log(body);
+    try {
+      const res = await dispatch(login(body));
+      unwrapResult(res);
+      navigate(path.home);
+    } catch (error) {
+      if (error.status === 400) {
+        setError('password', {
+          type: 'server',
+          message: error.message,
+        });
+      }
+    }
   };
 
   return (
@@ -52,7 +82,7 @@ export default function Login() {
         sm={4}
         md={7}
         sx={{
-          backgroundImage: 'url(https://source.unsplash.com/random)',
+          backgroundImage: `url(${Background})`,
           backgroundRepeat: 'no-repeat',
           backgroundColor: (t) =>
             t.palette.mode === 'light'
@@ -81,7 +111,7 @@ export default function Login() {
           <Box
             component="form"
             noValidate
-            sx={{ mt: 1 }}
+            sx={{ mt: 1, width: 1 }}
             onSubmit={handleSubmit(handleLogin)}
           >
             <InputText
@@ -90,15 +120,13 @@ export default function Login() {
               label="Email"
               errors={errors}
             />
-            {/* <TextField
-              margin="normal"
-              fullWidth
+
+            <InputPassword
+              control={control}
               name="password"
               label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            /> */}
+              errors={errors}
+            />
             <Button
               type="submit"
               fullWidth
@@ -109,9 +137,9 @@ export default function Login() {
             </Button>
             <Grid container>
               <Grid item>
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
+                <MuiLink component={Link} to={path.register} variant="body2">
+                  {'You have an account? Sign Up'}
+                </MuiLink>
               </Grid>
             </Grid>
           </Box>

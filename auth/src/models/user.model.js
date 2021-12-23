@@ -9,6 +9,7 @@ const userSchema = new mongoose.Schema(
     passwordConfirm: { type: String },
     fullName: { type: String },
     role: { type: String, default: 'user' },
+    status: { type: Boolean, default: true },
     passwordResetToken: { type: String },
     passwordResetExpires: { type: Date },
   },
