@@ -26,6 +26,26 @@ const signupEvent = async () => {
   });
 };
 
+const authenticateEvent = async () => {
+  const clientId = 'query-authenticateEvent';
+  const kafka = new Kafka({
+    clientId,
+    brokers,
+  });
+
+  const topicName = 'auth-authen';
+
+  const queryConsumer = kafka.consumer({ groupId: clientId });
+  await queryConsumer.subscribe({ topic: topicName, fromBeginning: true });
+
+  await queryConsumer.run({
+    eachMessage: async ({ topic, partition, message }) => {
+      console.log(`Info User receive::`, message.value.toString());
+    },
+  });
+};
+
 module.exports = {
   signupEvent,
+  authenticateEvent,
 };

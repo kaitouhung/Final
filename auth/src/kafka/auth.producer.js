@@ -21,6 +21,27 @@ const signupEvent = async (user) => {
   await producer.disconnect();
 };
 
+const authenticateEvent = async (user) => {
+  const clientId = 'auth-authenticateEvent';
+  const kafka = new Kafka({
+    clientId,
+    brokers,
+  });
+
+  const topicname = 'auth-authen';
+
+  const producer = kafka.producer();
+  await producer.connect();
+
+  await producer.send({
+    topic: topicname,
+    messages: [{ value: JSON.stringify(user) }],
+  });
+
+  await producer.disconnect();
+};
+
 module.exports = {
   signupEvent,
+  authenticateEvent,
 };
