@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const userSchema = mongoose.Schema(
   {
@@ -7,15 +7,10 @@ const userSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    password: {
+
+    role: {
       type: String,
       required: true,
-    },
-    role: {
-      type: Number,
-      required: true,
-      default: 2,
-      enum: [1, 2],
     },
     status: {
       type: Boolean,
@@ -23,10 +18,11 @@ const userSchema = mongoose.Schema(
       default: true,
       enum: [true, false],
     },
+    fullName: { type: String, require: true },
   },
   { timestamps: true }
 );
 
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model('User', userSchema);
 
 module.exports = { User };

@@ -1,12 +1,17 @@
 const express = require('express');
+const cors = require('cors');
 
 const { connectMongo } = require('./config/mongodb');
 const { rootRouter } = require('./routes');
 const AppError = require('./utils/appError');
+const { checkAuthenEvent } = require('./kafka/auth.consumer');
+const { authenticateEvent } = require('./kafka/auth.producer');
 
 connectMongo();
 
 const app = express();
+
+app.use(cors());
 
 app.use(express.json());
 
@@ -31,4 +36,5 @@ const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => {
   console.log(`App is running in ${PORT}`);
+  checkAuthenEvent();
 });

@@ -5,6 +5,8 @@ const AppError = require('./../utils/appError');
 const { createHash } = require('crypto');
 require('dotenv').config();
 
+const { signupEvent } = require('./../kafka/auth.producer');
+
 // token generate sync
 const createToken = (userPayload) => {
   const token = jwt.sign(
@@ -40,11 +42,13 @@ const signup = async (req, res, next) => {
 
     const token = createToken(user);
 
-    await mailService.sendMailToUser(
-      user.email,
-      'Register Success',
-      'Thank you for registering. Visit my website.'
-    );
+    // await mailService.sendMailToUser(
+    //   user.email,
+    //   'Register Success',
+    //   'Thank you for registering. Visit my website.'
+    // );
+
+    signupEvent(user);
 
     return res.status(201).json({
       status: 'Register Success',
@@ -169,10 +173,41 @@ const authenticate = async (req, res, next) => {
   }
 };
 
+const authenticateKafka = (tokenService) => {
+  try {
+    const token = tokenService.split(' ')[1];
+
+    if (!token) {
+      return {
+        status: 'error',
+        message: 'You are not logged in!',
+      };
+    }
+
+    // sync
+    const decoded = jwt.verify(token, process.env.TOKEN);
+
+    if (!decoded) {
+      return {
+        status: 'error',
+        message: 'Token is invalid',
+      };
+    }
+
+    return decoded;
+  } catch (error) {
+    return {
+      status: 'error',
+      message: error.message,
+    };
+  }
+};
+
 module.exports = {
   signup,
   login,
   authenticate,
   forgotPassword,
   resetPassword,
+  authenticateKafka,
 };
