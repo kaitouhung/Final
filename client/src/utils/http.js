@@ -1,6 +1,6 @@
-import axios from 'axios';
-import { toast } from 'react-toastify';
-import LocalStorage from 'src/constants/localStorage';
+import axios from "axios";
+import { toast } from "react-toastify";
+import LocalStorage from "src/constants/localStorage";
 
 class Http {
   constructor() {
@@ -8,7 +8,7 @@ class Http {
       baseURL: process.env.REACT_APP_API,
       timeout: 10000,
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
     this.instance.interceptors.response.use(
@@ -19,7 +19,7 @@ class Http {
       (error) => {
         if (error.response.status === 401) {
           toast.error(error.response.data.message, {
-            position: 'top-center',
+            position: "top-center",
             autoClose: 3000,
           });
         }
