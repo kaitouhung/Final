@@ -3,9 +3,9 @@ import { toast } from 'react-toastify';
 import LocalStorage from 'src/constants/localStorage';
 
 class Http {
-  constructor() {
+  constructor(baseURL) {
     this.instance = axios.create({
-      baseURL: process.env.REACT_APP_API,
+      baseURL: baseURL,
       timeout: 10000,
       headers: {
         'Content-Type': 'application/json',
@@ -52,6 +52,9 @@ class Http {
   put(url, data, config = null) {
     return this.instance.put(url, data, config);
   }
+  patch(url, data, config = null) {
+    return this.instance.patch(url, data, config);
+  }
   delete(url, data, config = null) {
     return this.instance.delete(url, {
       data,
@@ -60,5 +63,5 @@ class Http {
   }
 }
 
-const http = new Http();
-export default http;
+// const http = new Http();
+export default Http;
