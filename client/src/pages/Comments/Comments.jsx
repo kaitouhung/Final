@@ -15,19 +15,24 @@ export default function Comments() {
   const [backendComments, setBackendComments] = useState([]);
   const [activeComment, setActiveComment] = useState(null);
   const socket = useRef();
+  const [visible, setVisible] = useState(5);
+  const [reply, setReply] = useState(null);
 
   const rootComments = backendComments.filter(
     (backendComment) => backendComment.parentId === null
   );
 
   const getReplies = (parentId) => {
-    return backendComments.filter(
-      (backendComment) => backendComment.parentId === parentId
-    );
-    // .sort(
-    //   (a, b) =>
-    //     new Date(a.createAt).getTime() - new Date(b.createAt).getTime()
-    // );
+    return backendComments
+      .filter((backendComment) => backendComment.parentId === parentId)
+      .sort(
+        (a, b) =>
+          new Date(a.createAt).getTime() - new Date(b.createAt).getTime()
+      );
+  };
+
+  const showMoreComment = () => {
+    setVisible((prev) => prev + 5);
   };
 
   const addComment = async (text, parentId) => {
@@ -43,7 +48,7 @@ export default function Comments() {
 
     socket.current.emit('add-comment', commentResponse.data);
 
-    setBackendComments([...backendComments, commentResponse.data]);
+    setBackendComments([commentResponse.data, ...backendComments]);
     setActiveComment(null);
   };
 
@@ -85,7 +90,7 @@ export default function Comments() {
     socket.current.emit('join-room-postId', { postId: '1' });
 
     socket.current.on('new-comment', (newComment) => {
-      setBackendComments((backendComments) => [...backendComments, newComment]);
+      setBackendComments((backendComments) => [newComment, ...backendComments]);
     });
 
     socket.current.on('delete-commentId', (commentId) => {
@@ -126,11 +131,13 @@ export default function Comments() {
       <InputTextarea submitLabel="Write" handleSubmit={addComment} />
 
       <div className="comments-container">
-        {rootComments.map((rootComment) => (
+        {rootComments.slice(0, visible).map((rootComment) => (
           <Comment
             key={rootComment._id}
             comment={rootComment}
             replies={getReplies(rootComment._id)}
+            reply={reply}
+            setReply={setReply}
             currentUserId={userId}
             deleteComment={deleteComment}
             activeComment={activeComment}
@@ -140,6 +147,11 @@ export default function Comments() {
           />
         ))}
       </div>
+      {visible < rootComments.length && (
+        <button className="comment-loadmore" onClick={showMoreComment}>
+          Load More
+        </button>
+      )}
     </div>
   );
 }

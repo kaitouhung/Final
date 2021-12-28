@@ -6,6 +6,8 @@ export default function InputTextarea({
   hasCancelButton = false,
   initialText = '',
   handleCancel,
+  setReply,
+  commentId,
 }) {
   const [text, setText] = useState(initialText);
   const isTextareaDisabled = text.length === 0;
@@ -14,6 +16,11 @@ export default function InputTextarea({
     e.preventDefault();
     handleSubmit(text);
     setText('');
+
+    setReply({
+      _id: commentId,
+      status: true,
+    });
   };
 
   return (

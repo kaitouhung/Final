@@ -12,6 +12,8 @@ export default function Comment({
   setActiveComment,
   parentId = null,
   updateComment,
+  reply,
+  setReply,
 }) {
   const timePassed = new Date() - new Date(comment.createdAt) > 300000;
   const canReply = Boolean(currentUserId);
@@ -29,6 +31,8 @@ export default function Comment({
     activeComment._id === comment._id;
 
   const replyId = parentId ? parentId : comment._id;
+
+  const isView = reply && reply._id === comment._id && reply.status === true;
 
   return (
     <div className="comment">
@@ -93,9 +97,39 @@ export default function Comment({
             hasCancelButton
             handleCancel={() => setActiveComment(null)}
             handleSubmit={(text) => addComment(text, replyId)}
+            setReply={setReply}
+            commentId={comment._id}
           />
         )}
-        {replies.length > 0 && (
+
+        {replies.length > 0 && !isView && (
+          <div
+            className="comment-viewmore"
+            onClick={() =>
+              setReply({
+                _id: comment._id,
+                status: true,
+              })
+            }
+          >
+            View more {replies.length} comment
+          </div>
+        )}
+        {replies.length > 0 && isView && (
+          <div
+            className="comment-viewmore"
+            onClick={() =>
+              setReply({
+                _id: comment._id,
+                status: false,
+              })
+            }
+          >
+            Hide {replies.length} comment
+          </div>
+        )}
+
+        {replies.length > 0 && isView && (
           <div className="replies">
             {replies.map((reply) => (
               <Comment

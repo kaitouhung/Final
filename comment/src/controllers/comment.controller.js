@@ -17,7 +17,7 @@ const addComment = async (req, res, next) => {
 const getCommentPost = async (req, res, next) => {
   try {
     const { postId } = req.query;
-    const commentList = await Comment.find({ postId });
+    const commentList = await Comment.find({ postId }).sort({ createdAt: -1 });
 
     if (!commentList) {
       return new AppError('PostId invalid, Not found comment list', 500);
