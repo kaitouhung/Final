@@ -1,7 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 require('dotenv').config();
-
+const { rootRouter } = require('./routes');
+const cors = require('cors');
 const {
   updateUserStatusConsumer,
   seedingAdminAccountConsumer,
@@ -13,6 +14,12 @@ const {
   signupEvent,
   authenticateEvent,
 } = require('./kafka-auth/auth.consumer');
+
+const {
+  addCommentEvent,
+  updateCommentEvent,
+  deleteCommentEvent,
+} = require('./kafka-comment/comment.consumer');
 
 const { checkAuthenEvent } = require('./kafka-auth/auth.producer');
 
@@ -29,6 +36,26 @@ app.get('/authen', (req, res, next) => {
   });
 });
 
+app.use(cors());
+app.use(express.json());
+
+app.use('/api/v1', rootRouter);
+
+app.all('*', (req, res, next) => {
+  next(new AppError('Not Found Router', 404));
+});
+
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+  const status = err.status || 'error';
+
+  return res.status(statusCode).json({
+    status: status,
+    message: err.message,
+    stack: err.stack,
+  });
+});
+
 app.listen(process.env.PORT, () => {
   console.log('Listening on port 3004');
   mongoose
@@ -39,11 +66,17 @@ app.listen(process.env.PORT, () => {
     .catch((err) => {
       console.log(err);
     });
-  updateUserStatusConsumer();
-  seedingAdminAccountConsumer();
-  createPostConsumer();
-  crawlNewsConsumer();
+  // updateUserStatusConsumer();
+  // seedingAdminAccountConsumer();
+  // createPostConsumer();
+  // crawlNewsConsumer();
+
   // auth
-  signupEvent();
-  authenticateEvent();
+  // signupEvent();
+  // authenticateEvent();
+
+  //comment
+  addCommentEvent();
+  updateCommentEvent();
+  deleteCommentEvent();
 });

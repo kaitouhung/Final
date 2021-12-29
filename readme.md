@@ -6,7 +6,8 @@
 - Auth: 8080
 - Query: 3004
 - Post: 3001
-- Crwal: 8000
+- Crawl: 8000
+- Comment: 8081
 
 ## 2. Kafka Topic
 

@@ -140,9 +140,9 @@ export default function Comments() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const commentList = await new Http(
-          process.env.REACT_APP_API_Comment
-        ).get('?postId=1');
+        const commentList = await new Http(process.env.REACT_APP_API_Query).get(
+          '?postId=1'
+        );
 
         setBackendComments(commentList.data);
       } catch (error) {

@@ -1,5 +1,10 @@
 const Comment = require('../models/comment.model');
 const AppError = require('../utils/appError');
+const {
+  addCommentEvent,
+  updateCommentEvent,
+  deleteCommentEvent,
+} = require('./../kafka/comment.producer');
 
 const addComment = async (req, res, next) => {
   try {
@@ -9,6 +14,8 @@ const addComment = async (req, res, next) => {
       return next(new AppError('Content is too short', 500));
     }
     const comment = await new Comment(req.body).save();
+
+    addCommentEvent(comment);
 
     return res.status(200).json({
       status: 'Create Comment Successful',
@@ -54,6 +61,8 @@ const updateComment = async (req, res, next) => {
       return next(new AppError('Id invalid ', 500));
     }
 
+    updateCommentEvent(comment);
+
     return res.status(200).json({
       status: 'Update Comment Success',
       data: comment,
@@ -71,6 +80,8 @@ const deleteComment = async (req, res, next) => {
       Comment.findByIdAndDelete(id),
       Comment.deleteMany({ parentId: id }),
     ]);
+
+    deleteCommentEvent(id);
 
     return res.status(200).json({
       status: 'Delete comment successful',
