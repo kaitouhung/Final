@@ -3,6 +3,11 @@ const AppError = require('../utils/appError');
 
 const addComment = async (req, res, next) => {
   try {
+    const { content } = req.body;
+
+    if (content.length < 0 || !content.length) {
+      return next(new AppError('Content is too short', 500));
+    }
     const comment = await new Comment(req.body).save();
 
     return res.status(200).json({
@@ -20,7 +25,7 @@ const getCommentPost = async (req, res, next) => {
     const commentList = await Comment.find({ postId }).sort({ createdAt: -1 });
 
     if (!commentList) {
-      return new AppError('PostId invalid, Not found comment list', 500);
+      return next(new AppError('PostId invalid, Not found comment list', 500));
     }
 
     return res.status(200).json({
@@ -45,6 +50,10 @@ const updateComment = async (req, res, next) => {
       }
     );
 
+    if (!comment) {
+      return next(new AppError('Id invalid ', 500));
+    }
+
     return res.status(200).json({
       status: 'Update Comment Success',
       data: comment,
@@ -68,7 +77,7 @@ const deleteComment = async (req, res, next) => {
       data: comment[0],
     });
   } catch (error) {
-    next(error);
+    return next(new AppError('Id invalid ', 500));
   }
 };
 

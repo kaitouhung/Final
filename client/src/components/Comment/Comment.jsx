@@ -52,6 +52,7 @@ export default function Comment({
             initialText={comment.content}
             handleSubmit={(text) => updateComment(text, comment._id)}
             handleCancel={() => setActiveComment(null)}
+            setReply={setReply}
           />
         )}
         <div className="comment-actions">

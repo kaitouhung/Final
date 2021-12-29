@@ -163,7 +163,7 @@ const authenticate = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.TOKEN);
 
     if (!decoded) {
-      return next(new AppError('Token is invalid', 400));
+      return next(new AppError('Token is invalid', 401));
     }
 
     req.user = decoded;

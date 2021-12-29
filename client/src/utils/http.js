@@ -19,10 +19,11 @@ class Http {
       (error) => {
         if (error.response.status === 401) {
           toast.error(error.response.data.message, {
-            position: 'top-center',
+            position: 'top-right',
             autoClose: 3000,
           });
         }
+        console.log(error);
         const result = {
           ...error.response.data,
           status: error.response.status,

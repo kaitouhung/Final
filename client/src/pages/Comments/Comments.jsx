@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { toast } from 'react-toastify';
 import { io } from 'socket.io-client';
 import Comment from 'src/components/Comment/Comment';
 import InputTextarea from 'src/components/InputTextarea/InputTextarea';
@@ -36,51 +37,74 @@ export default function Comments() {
   };
 
   const addComment = async (text, parentId) => {
-    const body = {
-      userId: userId,
-      parentId,
-      content: text,
-    };
+    try {
+      const body = {
+        userId: userId,
+        parentId,
+        content: text,
+      };
 
-    const commentResponse = await new Http(
-      process.env.REACT_APP_API_Comment
-    ).post('', body);
+      const commentResponse = await new Http(
+        process.env.REACT_APP_API_Comment
+      ).post('', body);
 
-    socket.current.emit('add-comment', commentResponse.data);
+      socket.current.emit('add-comment', commentResponse.data);
 
-    setBackendComments([commentResponse.data, ...backendComments]);
-    setActiveComment(null);
+      setBackendComments([commentResponse.data, ...backendComments]);
+      setActiveComment(null);
+    } catch (error) {
+      toast.error(error.message, {
+        position: 'top-right',
+        autoClosse: 4000,
+      });
+    }
   };
 
   const updateComment = async (text, commentId) => {
-    const commentResponse = await new Http(
-      process.env.REACT_APP_API_Comment
-    ).patch(`${commentId}`, { content: text });
+    try {
+      const commentResponse = await new Http(
+        process.env.REACT_APP_API_Comment
+      ).patch(`${commentId}`, { content: text });
 
-    socket.current.emit('update-comment', commentResponse.data);
+      socket.current.emit('update-comment', commentResponse.data);
 
-    const index = backendComments.findIndex(
-      (backendComment) => backendComment._id === commentResponse.data._id
-    );
+      const index = backendComments.findIndex(
+        (backendComment) => backendComment._id === commentResponse.data._id
+      );
 
-    backendComments[index].content = text;
+      backendComments[index].content = text;
 
-    setBackendComments(backendComments);
+      setBackendComments(backendComments);
 
-    setActiveComment(null);
+      setActiveComment(null);
+    } catch (error) {
+      toast.error(error.message, {
+        position: 'top-right',
+        autoClosse: 4000,
+      });
+    }
   };
 
   const deleteComment = async (commentId) => {
-    if (window.confirm('Are you sure that you want to remove comment')) {
-      await new Http(process.env.REACT_APP_API_Comment).delete(`${commentId}`);
+    try {
+      if (window.confirm('Are you sure that you want to remove comment')) {
+        await new Http(process.env.REACT_APP_API_Comment).delete(
+          `${commentId}`
+        );
 
-      socket.current.emit('delete-comment', commentId);
+        socket.current.emit('delete-comment', commentId);
 
-      const updateBackendComments = backendComments.filter(
-        (backendComment) => backendComment._id !== commentId
-      );
+        const updateBackendComments = backendComments.filter(
+          (backendComment) => backendComment._id !== commentId
+        );
 
-      setBackendComments(updateBackendComments);
+        setBackendComments(updateBackendComments);
+      }
+    } catch (error) {
+      toast.error(error.message, {
+        position: 'top-right',
+        autoClosse: 4000,
+      });
     }
   };
 
@@ -115,11 +139,18 @@ export default function Comments() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const commentList = await new Http(process.env.REACT_APP_API_Comment).get(
-        '?postId=1'
-      );
+      try {
+        const commentList = await new Http(
+          process.env.REACT_APP_API_Comment
+        ).get('?postId=1');
 
-      setBackendComments(commentList.data);
+        setBackendComments(commentList.data);
+      } catch (error) {
+        toast.error(error.message, {
+          position: 'top-right',
+          autoClosse: 4000,
+        });
+      }
     };
     fetchData();
   }, []);
@@ -128,7 +159,11 @@ export default function Comments() {
     <div>
       <h3 className="comments-title">Comments</h3>
       <div className="comment-form-title">Write Comment</div>
-      <InputTextarea submitLabel="Write" handleSubmit={addComment} />
+      <InputTextarea
+        submitLabel="Write"
+        handleSubmit={addComment}
+        setReply={setReply}
+      />
 
       <div className="comments-container">
         {rootComments.slice(0, visible).map((rootComment) => (
