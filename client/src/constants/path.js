@@ -2,6 +2,8 @@ export const path = {
   login: "/login",
   register: "/register",
   home: "/home",
-  notFound: "*",
   newsDetaill: "/news-details",
+  test: "/test",
+  comments: "/comments",
+  notFound: "*",
 };

@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const queryRouter = require("./routes/index.js");
 require("dotenv").config();
 
 const {
@@ -16,8 +17,11 @@ const {
 } = require("./kafka-auth/auth.consumer");
 
 const { checkAuthenEvent } = require("./kafka-auth/auth.producer");
+const { getTopicConsumer } = require("./consumer/topic.consumer.js");
 
 const app = express();
+app.use(express.json());
+app.use(cors());
 
 app.get("/authen", (req, res, next) => {
   const tokenService =
@@ -29,6 +33,8 @@ app.get("/authen", (req, res, next) => {
     message: "Send request to kafka success",
   });
 });
+
+app.use(queryRouter);
 
 app.listen(process.env.PORT, () => {
   console.log("Listening on port 3004");
@@ -47,4 +53,7 @@ app.listen(process.env.PORT, () => {
   // auth
   signupEvent();
   authenticateEvent();
+
+  //topic
+  getTopicConsumer();
 });

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import MenuItem from "@mui/material/MenuItem";
-import http from "./../../utils/http.js";
+import axios from "axios";
 import News from "./News/News";
 
 const styleMenuHeader = {
@@ -13,15 +13,14 @@ const styleMenuHeader = {
 export default function Home() {
   const [categorys, setCategorys] = useState([]);
   const [chosenCategory, setChosenCategory] = useState("");
-  const [page, setPage] = useState(1);
   useEffect(() => {
     getCategorys();
   }, []);
 
   const getCategorys = async () => {
-    const listCategorys = await http.get(`http://localhost:3004/categorys`);
-    console.log(listCategorys);
-    setCategorys(listCategorys.data);
+    const listCategorys = await axios.get(`http://localhost:3004/categorys`);
+    console.log(listCategorys.data);
+    setCategorys(listCategorys.data.data);
   };
 
   const getChosen = (event) => {

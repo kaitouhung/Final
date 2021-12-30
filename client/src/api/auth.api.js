@@ -1,14 +1,14 @@
-import http from 'src/utils/http';
+import Http from 'src/utils/http';
 
 const authApi = {
   register(data) {
-    return http.post('signup', data);
+    return new Http(process.env.REACT_APP_API_Auth).post('signup', data);
   },
   login(data) {
-    return http.post('login', data);
+    return new Http(process.env.REACT_APP_API_Auth).post('login', data);
   },
   logout() {
-    return http.post('logout');
+    return new Http(process.env.REACT_APP_API_Auth).post('logout');
   },
 };
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import http from "./../../../utils/http.js";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Pagination } from "@mui/material";
 
@@ -12,10 +12,10 @@ export default function News({ chosenCategory }) {
   }, [chosenCategory]);
 
   const getListNews = async (category, page) => {
-    const result = await http.get(
+    const result = await axios.get(
       `http://localhost:3004/posts?category=${category}&&page=${page}`
     );
-    setListNews(result.data);
+    setListNews(result.data.data);
     setTotalPages(result.totalPages);
   };
 

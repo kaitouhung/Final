@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const models = require("./../db/index.js");
+const topicRouter = require("./topic/index.js");
 
 router.get("/categorys", async (req, res, next) => {
   try {
@@ -33,5 +34,7 @@ router.get("/posts", async (req, res, next) => {
     console.log(error);
   }
 });
+
+router.use("/topic", topicRouter);
 
 module.exports = router;
