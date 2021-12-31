@@ -10,30 +10,46 @@ export default function CommentTopic({ topic, socket }) {
     topicId: "",
     userId: "",
     parentId: "",
-    content: " ",
+    content: "",
+    userData: {},
+  });
+  const [finalComment, setFinalComment] = useState({
+    postId: "",
+    topicId: "",
+    userId: "",
+    parentId: "",
+    content: "",
+    userData: {},
   });
   const navigation = useNavigate();
 
   useEffect(() => {
     socket.on("new-topic-comment", (data) => {
+      setFinalComment(data);
       console.log(data);
     });
-  }, [socket]);
+  }, [finalComment]);
 
   const handleClick = async (e) => {
     e.preventDefault();
-    const user = JSON.parse(localStorage.getItem("user"));
-    console.log(topic);
     if (!topic) {
       alert("chua co topic ");
     }
     if (comment.content.length > 0) {
-      console.log(comment);
+      const user = JSON.parse(localStorage.getItem("user"));
+      setFinalComment(comment);
       const newComments = await axios.post(
         "http://localhost:8081/api/v1/comments/topic-comments",
         comment
       );
-      socket.emit("add-topic-comment", newComments.data.data);
+      socket.emit("add-topic-comment", {
+        ...newComments.data.data,
+        userData: {
+          _id: user._id,
+          email: user.email,
+          fullName: user.fullName,
+        },
+      });
     }
   };
 
@@ -47,6 +63,11 @@ export default function CommentTopic({ topic, socket }) {
       userId: user._id,
       parentId: null,
       content: e.target.value,
+      userData: {
+        _id: user._id,
+        email: user.email,
+        fullName: user.fullName,
+      },
     });
   };
 
@@ -59,8 +80,12 @@ export default function CommentTopic({ topic, socket }) {
           Send
         </button>
       </div>
-      <div>
-        <ListCommentTopic socket={socket} comment={comment} />
+      <div style={{ height: "40vh", overflow: "auto" }}>
+        <ListCommentTopic
+          socket={socket}
+          comment={finalComment}
+          topic={topic}
+        />
       </div>
     </div>
   );

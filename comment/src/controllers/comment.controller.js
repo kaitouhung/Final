@@ -1,4 +1,7 @@
 const Comment = require("../models/comment.model");
+const {
+  addTopicCommentProducer,
+} = require("../producer/topic-comment.producer");
 const AppError = require("../utils/appError");
 
 const addComment = async (req, res, next) => {
@@ -93,7 +96,7 @@ const getTopicComments = async (req, res, next) => {
 const addTopicComment = async (req, res, next) => {
   try {
     const comment = await new Comment(req.body).save();
-
+    addTopicCommentProducer(comment);
     return res.status(200).json({
       status: "Create Comment Successful",
       data: comment,

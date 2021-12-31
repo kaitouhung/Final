@@ -18,6 +18,9 @@ const {
 
 const { checkAuthenEvent } = require("./kafka-auth/auth.producer");
 const { getTopicConsumer } = require("./consumer/topic.consumer.js");
+const {
+  addTopicCommentConsumer,
+} = require("./consumer/topic-comment.consumer.js");
 
 const app = express();
 app.use(express.json());
@@ -56,4 +59,7 @@ app.listen(process.env.PORT, () => {
 
   //topic
   getTopicConsumer();
+
+  //comment
+  addTopicCommentConsumer();
 });
