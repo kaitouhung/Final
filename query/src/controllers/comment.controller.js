@@ -4,7 +4,8 @@ const AppError = require('../utils/appError');
 const getCommentPost = async (req, res, next) => {
   try {
     const { postId } = req.query;
-    const commentList = await Comment.find({ postId }).sort({ createdAt: -1 });
+    const commentList = await Comment.find({ postId })
+    .sort({ createdAt: -1 });
 
     if (!commentList) {
       return next(new AppError('PostId invalid, Not found comment list', 500));

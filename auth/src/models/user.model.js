@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema(
     email: { type: String },
     password: { type: String },
     passwordConfirm: { type: String },
-    fullName: { type: String },
+    fullName: { type: String, default: 'anonymous' },
     role: { type: String, default: 'user' },
     status: { type: Boolean, default: true },
     passwordResetToken: { type: String },

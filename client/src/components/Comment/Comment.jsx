@@ -1,5 +1,6 @@
 import React from 'react';
 import Avatar from 'src/assets/img/user-icon.png';
+import { format } from 'timeago.js';
 import InputTextarea from '../InputTextarea/InputTextarea';
 
 export default function Comment({
@@ -18,7 +19,7 @@ export default function Comment({
   const timePassed = new Date() - new Date(comment.createdAt) > 300000;
   const canReply = Boolean(currentUserId);
   const canModify = currentUserId === comment.userId && !timePassed;
-  const createdAt = new Date(comment.createdAt).toLocaleDateString();
+  const createdAt = format(comment.createdAt);
 
   const isReplying =
     activeComment &&
@@ -41,7 +42,7 @@ export default function Comment({
       </div>
       <div className="comment-right-part">
         <div className="comment-content">
-          <div className="comment-author"> {comment.userId}</div>
+          <div className="comment-author"> {comment.fullName}</div>
           <div>{createdAt}</div>
         </div>
         {!isEditing && <div className="comment-text">{comment.content}</div>}
@@ -144,6 +145,7 @@ export default function Comment({
                 activeComment={activeComment}
                 setActiveComment={setActiveComment}
                 updateComment={updateComment}
+                setReply={setReply}
               />
             ))}
           </div>

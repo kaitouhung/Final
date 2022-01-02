@@ -1,16 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { io } from 'socket.io-client';
 import Comment from 'src/components/Comment/Comment';
 import InputTextarea from 'src/components/InputTextarea/InputTextarea';
+import { path } from 'src/constants/path';
 import Http from 'src/utils/http';
+import { unauthorize } from '../Auth/auth.slice';
 import './comments.css';
-
-const arrName = ['sasuke', 'hinata', 'minato'];
-const index = Math.floor(Math.random() * 3);
-const userId = arrName[index];
-
-console.log(userId);
 
 export default function Comments() {
   const [backendComments, setBackendComments] = useState([]);
@@ -18,6 +16,11 @@ export default function Comments() {
   const socket = useRef();
   const [visible, setVisible] = useState(5);
   const [reply, setReply] = useState(null);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const profile = useSelector((state) => state.auth.profile);
+  const userId = profile?._id || null;
 
   const rootComments = backendComments.filter(
     (backendComment) => backendComment.parentId === null
@@ -39,7 +42,7 @@ export default function Comments() {
   const addComment = async (text, parentId) => {
     try {
       const body = {
-        userId: userId,
+        // userId: userId,
         parentId,
         content: text,
       };
@@ -53,10 +56,10 @@ export default function Comments() {
       setBackendComments([commentResponse.data, ...backendComments]);
       setActiveComment(null);
     } catch (error) {
-      toast.error(error.message, {
-        position: 'top-right',
-        autoClosse: 4000,
-      });
+      if (error.status === 401) {
+        dispatch(unauthorize());
+        navigate(path.login);
+      }
     }
   };
 
@@ -78,10 +81,10 @@ export default function Comments() {
 
       setActiveComment(null);
     } catch (error) {
-      toast.error(error.message, {
-        position: 'top-right',
-        autoClosse: 4000,
-      });
+      if (error.status === 401) {
+        dispatch(unauthorize());
+        navigate(path.login);
+      }
     }
   };
 
@@ -101,10 +104,10 @@ export default function Comments() {
         setBackendComments(updateBackendComments);
       }
     } catch (error) {
-      toast.error(error.message, {
-        position: 'top-right',
-        autoClosse: 4000,
-      });
+      if (error.status === 401) {
+        dispatch(unauthorize());
+        navigate(path.login);
+      }
     }
   };
 

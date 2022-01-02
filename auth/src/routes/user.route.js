@@ -11,6 +11,9 @@ const {
 
 router.post('/signup', validateSignup, authController.signup);
 router.post('/login', validateLogin, authController.login);
+
+router.get('/verify-token/:token', authController.authenticate);
+
 router.post(
   '/forgotpassword',
   validateForgotPassword,

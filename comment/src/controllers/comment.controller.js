@@ -6,6 +6,53 @@ const {
   deleteCommentEvent,
 } = require('./../kafka/comment.producer');
 
+const axios = require('axios');
+require('dotenv').config();
+
+const { authenticateEvent } = require('./../kafka/comment.consumer');
+const { checkAuthenEvent } = require('./../kafka/comment.producer');
+
+// const authenticate = async (req, res, next) => {
+//   const token = req.header('authorization');
+
+//   if (!token) {
+//     return next(new AppError('You are not logged in!', 401));
+//   }
+
+//   // return res.status(200).json({
+//   //   data: token,
+//   // });
+
+//   checkAuthenEvent(token);
+//   authenticateEvent(req, res, next);
+
+//   // return res.status(200).json({
+//   //   data: token,
+//   // });
+// };
+
+const authenticate = async (req, res, next) => {
+  const token = req.header('authorization')?.split(' ')[1];
+  if (!token) {
+    return next(new AppError('You are not logged in!', 401));
+  }
+
+  try {
+    const user = await axios.get(`${process.env.URL_TOKEN}/${token}`);
+
+    if (!user) {
+      return next(new AppError('Token invalid or expires!', 401));
+    }
+
+    req.user = user.data.data;
+
+    next();
+  } catch (error) {
+    return next(new AppError('Token invalid or expires!', 401));
+    // next(error);
+  }
+};
+
 const addComment = async (req, res, next) => {
   try {
     const { content } = req.body;
@@ -13,13 +60,19 @@ const addComment = async (req, res, next) => {
     if (content.length < 0 || !content.length) {
       return next(new AppError('Content is too short', 500));
     }
-    const comment = await new Comment(req.body).save();
+    console.log(req.user);
+    const comment = await new Comment({
+      ...req.body,
+      userId: req.user._id,
+      fullName: req.user.fullName,
+    }).save();
 
     addCommentEvent(comment);
 
     return res.status(200).json({
       status: 'Create Comment Successful',
       data: comment,
+      // user: user,
     });
   } catch (error) {
     next(error);
@@ -97,4 +150,5 @@ module.exports = {
   getCommentPost,
   updateComment,
   deleteComment,
+  authenticate,
 };

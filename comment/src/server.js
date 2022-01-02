@@ -5,6 +5,8 @@ const { connectMongo } = require('./config/mongodb');
 const { rootRouter } = require('./routes');
 const AppError = require('./utils/appError');
 
+const { authenticateEvent } = require('./kafka/comment.consumer');
+
 connectMongo();
 
 const app = express();
@@ -34,4 +36,6 @@ const PORT = process.env.PORT || 8081;
 
 app.listen(PORT, () => {
   console.log(`App is running in ${PORT}`);
+
+  // authenticateEvent();
 });

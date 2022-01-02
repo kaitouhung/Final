@@ -11,6 +11,7 @@
     "axios": "^0.24.0",
     "classnames": "^2.3.1",
     "date-fns": "^2.27.0",
+    "date-format": "^3.0.0",
     "dompurify": "^2.3.4",
     "lodash": "^4.17.21",
     "node-sass": "^7.0.0",
@@ -25,6 +26,7 @@
     "react-scripts": "5.0.0",
     "react-toastify": "^8.1.0",
     "socket.io-client": "^4.4.0",
+    "timeago.js": "^4.0.2",
     "web-vitals": "^2.1.0",
     "yup": "^0.32.11"
   },

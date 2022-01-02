@@ -13,6 +13,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import Background from 'src/assets/img/login_register.jpg';
 import InputPassword from 'src/components/InputPassword/InputPassword';
 import InputText from 'src/components/InputText/InputText';
@@ -62,6 +63,10 @@ export default function Login() {
     try {
       const res = await dispatch(login(body));
       unwrapResult(res);
+      toast.success('Login successfully', {
+        position: 'top-right',
+        autoClose: 3000,
+      });
       navigate(path.home);
     } catch (error) {
       if (error.status === 400) {

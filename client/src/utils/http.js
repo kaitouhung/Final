@@ -23,11 +23,12 @@ class Http {
             autoClose: 3000,
           });
         }
-        console.log(error);
+
         const result = {
           ...error.response.data,
           status: error.response.status,
         };
+
         return Promise.reject(result);
       }
     );

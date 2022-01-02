@@ -11,9 +11,10 @@ const { signupEvent } = require('./../kafka/auth.producer');
 const createToken = (userPayload) => {
   const token = jwt.sign(
     {
-      id: userPayload._id,
+      _id: userPayload._id,
       email: userPayload.email,
       role: userPayload.role,
+      fullName: userPayload.fullName,
     },
     process.env.TOKEN,
     { expiresIn: 7 * 60 * 60 }
@@ -152,23 +153,20 @@ const resetPassword = async (req, res, next) => {
 
 const authenticate = async (req, res, next) => {
   try {
-    // ignore Bearer
-    const token = req.header('authorization').split(' ')[1];
+    const { token } = req.params;
 
-    if (!token) {
-      return next(new AppError('You are not logged in!', 401));
-    }
-
-    // sync
     const decoded = jwt.verify(token, process.env.TOKEN);
 
     if (!decoded) {
       return next(new AppError('Token is invalid', 401));
     }
 
-    req.user = decoded;
-    next();
+    return res.status(200).json({
+      status: 'token valid',
+      data: decoded,
+    });
   } catch (error) {
+    error.statusCode = 401;
     next(error);
   }
 };

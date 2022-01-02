@@ -21,7 +21,7 @@ const checkAuthenEvent = async () => {
 
       if (tokenService) {
         const user = authenticateKafka(tokenService);
-        authenticateEvent(user);
+        authenticateEvent({ ...user, status: 'success' });
       } else {
         authenticateEvent({
           status: 'error',
