@@ -171,6 +171,30 @@ const authenticate = async (req, res, next) => {
   }
 };
 
+const authenticateAuth = async (req, res, next) => {
+  try {
+    // ignore Bearer
+    const token = req.header('authorization').split(' ')[1];
+
+    if (!token) {
+      return next(new AppError('You are not logged in!', 401));
+    }
+
+    // sync
+    const decoded = jwt.verify(token, process.env.TOKEN);
+
+    if (!decoded) {
+      return next(new AppError('Token is invalid', 400));
+    }
+
+    req.user = decoded;
+    next();
+  } catch (error) {
+    error.statusCode = 401;
+    next(error);
+  }
+};
+
 const authenticateKafka = (tokenService) => {
   try {
     const token = tokenService.split(' ')[1];
@@ -208,4 +232,5 @@ module.exports = {
   forgotPassword,
   resetPassword,
   authenticateKafka,
+  authenticateAuth,
 };

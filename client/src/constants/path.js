@@ -4,5 +4,6 @@ export const path = {
   home: '/home',
   test: '/test',
   comments: '/comments',
+  users: '/users',
   notFound: '*',
 };

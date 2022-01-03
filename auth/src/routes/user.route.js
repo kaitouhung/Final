@@ -9,11 +9,31 @@ const {
   validateResetPassword,
 } = require('./../validations/auth.validation');
 
+const { uploadImage } = require('./../middlewares/multer');
+const {
+  uploadImageCloud,
+  removeImage,
+} = require('./../middlewares/cloudinary');
+
 router.post('/signup', validateSignup, authController.signup);
 router.post('/login', validateLogin, authController.login);
 
 router.get('/verify-token/:token', authController.authenticate);
+router.patch(
+  '/update-user',
+  authController.authenticateAuth,
+  userController.updateUser
+);
+router.patch(
+  '/upload-avatar',
+  authController.authenticateAuth,
+  uploadImage.single('avatar'),
+  removeImage,
+  uploadImageCloud,
+  userController.uploadAvatar
+);
 
+//-----------------------------------------------------------------------
 router.post(
   '/forgotpassword',
   validateForgotPassword,

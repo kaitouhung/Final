@@ -3,12 +3,12 @@ import { toast } from 'react-toastify';
 import LocalStorage from 'src/constants/localStorage';
 
 class Http {
-  constructor(baseURL) {
+  constructor(baseURL, type = 'application/json') {
     this.instance = axios.create({
       baseURL: baseURL,
       timeout: 10000,
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': type,
       },
     });
     this.instance.interceptors.response.use(

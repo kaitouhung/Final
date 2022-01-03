@@ -12,6 +12,7 @@ const userSchema = new mongoose.Schema(
     status: { type: Boolean, default: true },
     passwordResetToken: { type: String },
     passwordResetExpires: { type: Date },
+    avatar: { type: String },
   },
   { timestamps: true }
 );
