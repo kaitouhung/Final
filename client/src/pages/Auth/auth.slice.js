@@ -19,8 +19,12 @@ export const updateMe = createAsyncThunk(
   payloadCreator(userApi.updateMe)
 );
 
+export const uploadAvatar = createAsyncThunk(
+  'auth/uploadAvatar',
+  payloadCreator(userApi.uploadAvatar)
+);
+
 const handleAuthFulfilled = (state, action) => {
-  console.log(action.payload.data);
   const { data, token } = action.payload;
   state.profile = data;
   localStorage.setItem(LocalStorage.user, JSON.stringify(state.profile));
@@ -46,6 +50,10 @@ const auth = createSlice({
     [login.fulfilled]: handleAuthFulfilled,
     [register.fulfilled]: handleAuthFulfilled,
     [updateMe.fulfilled]: (state, action) => {
+      state.profile = action.payload.data;
+      localStorage.setItem(LocalStorage.user, JSON.stringify(state.profile));
+    },
+    [uploadAvatar.fulfilled]: (state, action) => {
       state.profile = action.payload.data;
       localStorage.setItem(LocalStorage.user, JSON.stringify(state.profile));
     },

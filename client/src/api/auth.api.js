@@ -7,9 +7,6 @@ const authApi = {
   login(data) {
     return new Http(process.env.REACT_APP_API_Auth).post('login', data);
   },
-  logout() {
-    return new Http(process.env.REACT_APP_API_Auth).post('logout');
-  },
 };
 
 export default authApi;

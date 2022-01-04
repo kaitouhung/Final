@@ -15,6 +15,7 @@ const createToken = (userPayload) => {
       email: userPayload.email,
       role: userPayload.role,
       fullName: userPayload.fullName,
+      avatar: userPayload.avatar,
     },
     process.env.TOKEN,
     { expiresIn: 7 * 60 * 60 }
@@ -174,7 +175,7 @@ const authenticate = async (req, res, next) => {
 const authenticateAuth = async (req, res, next) => {
   try {
     // ignore Bearer
-    const token = req.header('authorization').split(' ')[1];
+    const token = req.header('authorization')?.split(' ')[1];
 
     if (!token) {
       return next(new AppError('You are not logged in!', 401));

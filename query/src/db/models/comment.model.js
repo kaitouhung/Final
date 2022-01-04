@@ -4,8 +4,8 @@ const commentSchema = new mongoose.Schema(
   {
     postId: { type: String, default: '1' },
     topicId: { type: mongoose.SchemaTypes.ObjectId, default: null },
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    fullName: { type: String },
+    userId: { type: mongoose.SchemaTypes.ObjectId, ref: 'User' },
+
     parentId: { type: mongoose.SchemaTypes.ObjectId, default: null },
     content: { type: String },
   },

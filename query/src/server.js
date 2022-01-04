@@ -13,6 +13,7 @@ const {
 const {
   signupEvent,
   authenticateEvent,
+  updateUserEvent,
 } = require('./kafka-auth/auth.consumer');
 
 const {
@@ -72,8 +73,9 @@ app.listen(process.env.PORT, () => {
   // crawlNewsConsumer();
 
   // auth
-  // signupEvent();
+  signupEvent();
   // authenticateEvent();
+  updateUserEvent();
 
   //comment
   addCommentEvent();

@@ -26,6 +26,31 @@ const signupEvent = async () => {
   });
 };
 
+const updateUserEvent = async () => {
+  const clientId = 'query-updateUserEvent';
+  const kafka = new Kafka({
+    clientId,
+    brokers,
+  });
+
+  const topicName = 'auth-updateUser';
+
+  const queryConsumer = kafka.consumer({ groupId: clientId });
+  await queryConsumer.subscribe({ topic: topicName, fromBeginning: true });
+
+  await queryConsumer.run({
+    eachMessage: async ({ topic, partition, message }) => {
+      const user = JSON.parse(message.value);
+
+      if (user) {
+        await User.findByIdAndUpdate(user._id, user, {
+          new: true,
+        });
+      }
+    },
+  });
+};
+
 const authenticateEvent = async () => {
   const clientId = 'query-authenticateEvent';
   const kafka = new Kafka({
@@ -48,4 +73,5 @@ const authenticateEvent = async () => {
 module.exports = {
   signupEvent,
   authenticateEvent,
+  updateUserEvent,
 };

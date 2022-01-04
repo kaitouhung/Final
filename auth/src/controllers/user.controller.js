@@ -2,6 +2,7 @@ const User = require('./../models/user.model');
 const { UserCloud } = require('./../models/userCloud.model');
 const AppError = require('./../utils/appError');
 const bcrypt = require('bcryptjs');
+const { updateUserEvent } = require('./../kafka/auth.producer');
 
 const getUserByMyself = async (req, res, next) => {
   try {
@@ -42,14 +43,18 @@ const uploadAvatar = async (req, res) => {
       new UserCloud(newCloudinary).save(),
     ]);
 
+    const userUpdated = result[0].toObject({
+      transform: (doc, ret, option) => {
+        delete ret.password;
+        return ret;
+      },
+    });
+
+    updateUserEvent(userUpdated);
+
     return res.status(200).json({
       status: 'Upload avatar success',
-      data: result[0].toObject({
-        transform: (doc, ret, option) => {
-          delete ret.password;
-          return ret;
-        },
-      }),
+      data: userUpdated,
     });
   } catch (error) {
     next(error);

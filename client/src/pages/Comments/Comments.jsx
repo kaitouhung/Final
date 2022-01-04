@@ -51,9 +51,20 @@ export default function Comments() {
         process.env.REACT_APP_API_Comment
       ).post('', body);
 
-      socket.current.emit('add-comment', commentResponse.data);
+      let newComment = commentResponse.data;
 
-      setBackendComments([commentResponse.data, ...backendComments]);
+      newComment = {
+        ...newComment,
+        userId: {
+          _id: newComment.userId,
+          fullName: profile.fullName,
+          avatar: profile.avatar,
+        },
+      };
+
+      socket.current.emit('add-comment', newComment);
+
+      setBackendComments([newComment, ...backendComments]);
       setActiveComment(null);
     } catch (error) {
       if (error.status === 401) {

@@ -19,6 +19,7 @@ const userSchema = mongoose.Schema(
       enum: [true, false],
     },
     fullName: { type: String, require: true },
+    avatar: { type: String },
   },
   { timestamps: true }
 );

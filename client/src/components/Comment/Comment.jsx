@@ -1,5 +1,4 @@
 import React from 'react';
-import Avatar from 'src/assets/img/user-icon.png';
 import { format } from 'timeago.js';
 import InputTextarea from '../InputTextarea/InputTextarea';
 
@@ -15,10 +14,11 @@ export default function Comment({
   updateComment,
   reply,
   setReply,
+  parent,
 }) {
   const timePassed = new Date() - new Date(comment.createdAt) > 300000;
   const canReply = Boolean(currentUserId);
-  const canModify = currentUserId === comment.userId && !timePassed;
+  const canModify = currentUserId === comment.userId._id && !timePassed;
   const createdAt = format(comment.createdAt);
 
   const isReplying =
@@ -35,14 +35,18 @@ export default function Comment({
 
   const isView = reply && reply._id === comment._id && reply.status === true;
 
+  const avatar =
+    comment.userId.avatar ||
+    'https://res.cloudinary.com/mern-itachi/image/upload/v1641222036/users/hxc8yfsq3eb92efff7vs.png';
+
   return (
     <div className="comment">
       <div className="comment-image-container">
-        <img src={Avatar} alt="" />
+        <img src={avatar} alt="" />
       </div>
       <div className="comment-right-part">
         <div className="comment-content">
-          <div className="comment-author"> {comment.fullName}</div>
+          <div className="comment-author"> {comment.userId.fullName}</div>
           <div>{createdAt}</div>
         </div>
         {!isEditing && <div className="comment-text">{comment.content}</div>}
@@ -54,18 +58,24 @@ export default function Comment({
             handleSubmit={(text) => updateComment(text, comment._id)}
             handleCancel={() => setActiveComment(null)}
             setReply={setReply}
+            commentId={comment._id}
+            parent={parent}
           />
         )}
         <div className="comment-actions">
           {canReply && (
             <div
               className="comment-action"
-              onClick={() =>
+              onClick={() => {
                 setActiveComment({
                   _id: comment._id,
                   type: 'replying',
-                })
-              }
+                });
+                // setReply({
+                //   _id: comment._id,
+                //   status: true,
+                // });
+              }}
             >
               Reply
             </div>
@@ -73,12 +83,16 @@ export default function Comment({
           {canModify && (
             <div
               className="comment-action"
-              onClick={() =>
+              onClick={() => {
                 setActiveComment({
                   _id: comment._id,
                   type: 'editing',
-                })
-              }
+                });
+                // setReply({
+                //   _id: comment._id,
+                //   status: true,
+                // });
+              }}
             >
               Edit
             </div>
@@ -101,6 +115,7 @@ export default function Comment({
             handleSubmit={(text) => addComment(text, replyId)}
             setReply={setReply}
             commentId={comment._id}
+            parent={parent}
           />
         )}
 
@@ -146,6 +161,7 @@ export default function Comment({
                 setActiveComment={setActiveComment}
                 updateComment={updateComment}
                 setReply={setReply}
+                parent={comment}
               />
             ))}
           </div>

@@ -5,7 +5,11 @@ const getCommentPost = async (req, res, next) => {
   try {
     const { postId } = req.query;
     const commentList = await Comment.find({ postId })
-    .sort({ createdAt: -1 });
+      .populate({
+        path: 'userId',
+        select: '_id fullName avatar',
+      })
+      .sort({ createdAt: -1 });
 
     if (!commentList) {
       return next(new AppError('PostId invalid, Not found comment list', 500));

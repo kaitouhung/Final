@@ -1,8 +1,14 @@
 import Http from 'src/utils/http';
 
 const userApi = {
-  updateMe() {
-    return new Http(process.env.REACT_APP_API_Auth).patch('update-user');
+  updateMe(data) {
+    return new Http(process.env.REACT_APP_API_Auth).patch('update-user', data);
+  },
+  uploadAvatar(data) {
+    return new Http(
+      process.env.REACT_APP_API_Auth,
+      'multipart/form-data'
+    ).patch('upload-avatar', data);
   },
 };
 

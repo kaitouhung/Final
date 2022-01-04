@@ -60,11 +60,10 @@ const addComment = async (req, res, next) => {
     if (content.length < 0 || !content.length) {
       return next(new AppError('Content is too short', 500));
     }
-    console.log(req.user);
+
     const comment = await new Comment({
       ...req.body,
       userId: req.user._id,
-      fullName: req.user.fullName,
     }).save();
 
     addCommentEvent(comment);

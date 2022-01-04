@@ -7,14 +7,14 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
+import { unwrapResult } from '@reduxjs/toolkit';
 import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { path } from 'src/constants/path';
-import Http from 'src/utils/http';
-import { unauthorize } from '../Auth/auth.slice';
+import { unauthorize, uploadAvatar } from '../Auth/auth.slice';
 
 export default function User() {
   const [imagePre, setImagePre] = useState(
@@ -40,10 +40,12 @@ export default function User() {
       const formData = new FormData();
       formData.append('avatar', data.uploadImage);
 
-      const res = await new Http(
-        process.env.REACT_APP_API_Auth,
-        'multipart/form-data'
-      ).patch('upload-avatar', formData);
+      // const res = await new Http(
+      //   process.env.REACT_APP_API_Auth,
+      //   'multipart/form-data'
+      // ).patch('upload-avatar', formData);
+
+      const res = await dispatch(uploadAvatar(formData)).then(unwrapResult);
 
       toast.success('Upload avatar Successfully', {
         position: 'top-right',
