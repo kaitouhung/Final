@@ -3,6 +3,7 @@ const { UserCloud } = require('./../models/userCloud.model');
 const AppError = require('./../utils/appError');
 const bcrypt = require('bcryptjs');
 const { updateUserEvent } = require('./../kafka/auth.producer');
+const { removeImageSync } = require('./../middlewares/cloudinary');
 
 const getUserByMyself = async (req, res, next) => {
   try {
@@ -22,39 +23,25 @@ const getUserByMyself = async (req, res, next) => {
   }
 };
 
-const uploadAvatar = async (req, res) => {
+const uploadAvatar = async (req, res, next) => {
   try {
     const { email } = req.user;
 
     const user = await User.findOne({ email });
     if (!user) return next(new AppError('No User with that ID', 403));
+    removeImageSync(user);
 
     const { cloudinary } = req;
     user.avatar = cloudinary.secure_url;
 
-    const newCloudinary = {
-      userId: req.user._id,
-      public_id: cloudinary.public_id,
-      secure_url: cloudinary.secure_url,
-    };
+    await user.save();
+    user.password = undefined;
 
-    const result = await Promise.all([
-      user.save(),
-      new UserCloud(newCloudinary).save(),
-    ]);
-
-    const userUpdated = result[0].toObject({
-      transform: (doc, ret, option) => {
-        delete ret.password;
-        return ret;
-      },
-    });
-
-    updateUserEvent(userUpdated);
+    updateUserEvent(user);
 
     return res.status(200).json({
       status: 'Upload avatar success',
-      data: userUpdated,
+      data: user,
     });
   } catch (error) {
     next(error);

@@ -10,10 +10,7 @@ const {
 } = require('./../validations/auth.validation');
 
 const { uploadImage } = require('./../middlewares/multer');
-const {
-  uploadImageCloud,
-  removeImage,
-} = require('./../middlewares/cloudinary');
+const { uploadImageCloud } = require('./../middlewares/cloudinary');
 
 router.post('/signup', validateSignup, authController.signup);
 router.post('/login', validateLogin, authController.login);
@@ -28,7 +25,6 @@ router.patch(
   '/upload-avatar',
   authController.authenticateAuth,
   uploadImage.single('avatar'),
-  removeImage,
   uploadImageCloud,
   userController.uploadAvatar
 );

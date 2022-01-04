@@ -16,6 +16,7 @@ const uploadImageCloud = async (req, res, next) => {
       upload_preset: 'users',
       resource_type: 'auto', // jpeg, png
     });
+
     req.cloudinary = result;
     next();
   } catch (error) {
@@ -23,32 +24,23 @@ const uploadImageCloud = async (req, res, next) => {
   }
 };
 
-const removeImage = async (req, res, next) => {
+const removeImageSync = async (user) => {
   try {
-    let typeId = null;
-    if (req.user._id) {
-      typeId = req.user._id;
+    const { avatar } = user;
+
+    if (avatar) {
+      const public_id = avatar.slice(avatar.indexOf('users')).split('.')[0];
+
+      cloudinary.uploader.destroy(public_id, {
+        upload_preset: 'users',
+      });
     }
-    // using for deleteuser
-    if (req.params.id) {
-      typeId = req.params.id;
-    }
-    const userCloudinary = await UserCloud.findOne({ userId: typeId });
-    if (userCloudinary) {
-      await Promise.all([
-        cloudinary.uploader.destroy(userCloudinary.public_id, {
-          upload_preset: 'users',
-        }),
-        UserCloud.deleteOne({ userId: typeId }),
-      ]);
-    }
-    next();
   } catch (error) {
-    next(error);
+    throw new Error(error.message);
   }
 };
 
 module.exports = {
   uploadImageCloud,
-  removeImage,
+  removeImageSync,
 };
