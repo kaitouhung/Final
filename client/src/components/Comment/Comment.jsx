@@ -16,9 +16,11 @@ export default function Comment({
   setReply,
   parent,
 }) {
-  const timePassed = new Date() - new Date(comment.createdAt) > 300000;
-  const canReply = Boolean(currentUserId);
-  const canModify = currentUserId === comment.userId._id && !timePassed;
+  // const timePassed = new Date() - new Date(comment.createdAt) > 300000;
+  // const canReply = Boolean(currentUserId);
+  // const canModify = currentUserId === comment.userId._id && !timePassed;
+  const canModify = currentUserId === comment.userId._id;
+
   const createdAt = format(comment.createdAt);
 
   const isReplying =
@@ -63,7 +65,7 @@ export default function Comment({
           />
         )}
         <div className="comment-actions">
-          {canReply && (
+          {/* {canReply && (
             <div
               className="comment-action"
               onClick={() => {
@@ -79,7 +81,22 @@ export default function Comment({
             >
               Reply
             </div>
-          )}
+          )} */}
+          <div
+            className="comment-action"
+            onClick={() => {
+              setActiveComment({
+                _id: comment._id,
+                type: 'replying',
+              });
+              // setReply({
+              //   _id: comment._id,
+              //   status: true,
+              // });
+            }}
+          >
+            Reply
+          </div>
           {canModify && (
             <div
               className="comment-action"
