@@ -4,7 +4,10 @@ const AppError = require('../utils/appError');
 const getCommentPost = async (req, res, next) => {
   try {
     const { postId } = req.query;
-    const commentList = await Comment.find({ postId })
+    const commentList = await Comment.find({
+      postId: postId,
+      topicId: { $eq: null },
+    })
       .populate({
         path: 'userId',
         select: '_id fullName avatar',

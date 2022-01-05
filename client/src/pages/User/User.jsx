@@ -10,15 +10,19 @@ import Typography from '@mui/material/Typography';
 import { unwrapResult } from '@reduxjs/toolkit';
 import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { path } from 'src/constants/path';
 import { unauthorize, uploadAvatar } from '../Auth/auth.slice';
 
 export default function User() {
+  const profile = useSelector((state) => state.auth.profile);
+
   const [imagePre, setImagePre] = useState(
-    'https://res.cloudinary.com/mern-itachi/image/upload/v1641222036/users/hxc8yfsq3eb92efff7vs.png'
+    profile?.avatar
+      ? profile?.avatar
+      : 'https://res.cloudinary.com/mern-itachi/image/upload/v1641222036/users/hxc8yfsq3eb92efff7vs.png'
   );
 
   const dispatch = useDispatch();
@@ -88,6 +92,8 @@ export default function User() {
             control={control}
             render={({ field }) => (
               <TextField
+                // accept="audio/*,video/*,image/*"
+                inputProps={{ accept: 'image/png, image/gif, image/jpeg' }}
                 name="uploadImage"
                 autoFocus
                 onChange={(event) => {
