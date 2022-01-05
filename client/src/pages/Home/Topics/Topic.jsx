@@ -15,6 +15,10 @@ export default function Topic({ topic, postID }) {
     getTopic(1, postID);
   }, []);
 
+  useEffect(() => {
+    setListTopics([...listTopics, topic]);
+  }, [topic]);
+
   const getTopic = async (start, postId) => {
     const result = await axios.get(
       `http://localhost:3004/topic?postID=${postId}&start=${start}&limit=10`
@@ -57,13 +61,13 @@ export default function Topic({ topic, postID }) {
   const RenderListTopics = () => {
     return (
       <ul style={{ height: "100%" }}>
-        {listTopics?.map((topic, index) => {
+        {listTopics?.map((topic1, index) => {
           // if (topic.open && topic.less) {
           return (
             <TopicItem
               key={index}
-              topic={topic}
-              chooseATopic={() => chooseATopic(topic)}
+              topic={topic1}
+              chooseATopic={() => chooseATopic(topic1)}
             />
           );
           // }
@@ -82,6 +86,7 @@ export default function Topic({ topic, postID }) {
 
   const createTopic = async (postID, userID, index, content) => {
     if (postID && userID && index && content) {
+      console.log("sdfsdfsdfsdf");
       const result = await axios.post(
         `http://localhost:3003/topic/create-topic`,
         {
@@ -92,7 +97,7 @@ export default function Topic({ topic, postID }) {
         }
       );
       setListTopics((listTopics) => {
-        return [...listTopics, result.data];
+        return [...listTopics, result.data.data];
       });
     } else {
       console.log("postID, userID, index or content is miss");

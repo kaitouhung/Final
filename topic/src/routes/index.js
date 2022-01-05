@@ -9,7 +9,7 @@ router.post("/create-topic", async (req, res, next) => {
     const { postID, userID, index, content } = req.body;
     const topic = await Topic.create({ postID, userID, index, content });
     await getTopicProducer(topic);
-    res.status(200).send(topic);
+    res.status(200).send({ data: topic });
   } catch (error) {
     console.log(error);
     next(error);

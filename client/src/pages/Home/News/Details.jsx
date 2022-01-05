@@ -45,7 +45,9 @@ export default function Details() {
         content: chooseTopic,
       }
     );
-    setNewTopic(result.data);
+    console.log("testadasdasd", result.data.data);
+
+    setNewTopic(result.data.data);
     setOpen(false);
   };
 

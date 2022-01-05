@@ -17,7 +17,7 @@ export default function News({ chosenCategory }) {
       `http://localhost:3004/posts?category=${category}&&page=${page}`
     );
     setListNews(result.data.data);
-    setTotalPages(result.totalPages);
+    setTotalPages(result.data.totalPages);
   };
 
   const handleDetail = (news) => {

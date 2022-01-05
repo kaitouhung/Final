@@ -32,7 +32,7 @@ router.get("/posts", async (req, res, next) => {
     const totalPages = Math.ceil(totalPosts / limit);
     res.status(200).send({ data: posts, totalPages });
   } catch (error) {
-    console.log(error);
+    next(error);
   }
 });
 
