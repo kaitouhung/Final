@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import http from "./../../../utils/http.js";
-import { useNavigate } from "react-router-dom";
-import { Pagination } from "@mui/material";
+import { Pagination } from '@mui/material';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function News({ chosenCategory }) {
   const navigate = useNavigate();
@@ -21,7 +20,6 @@ export default function News({ chosenCategory }) {
   };
 
   const handleDetail = (news) => {
-    console.log("Asdasdasd", news);
     navigate(`/news-details/${news._id}`, {
       state: { ...news },
     });
@@ -54,12 +52,12 @@ export default function News({ chosenCategory }) {
 }
 
 const newsStyle = {
-  display: "flex",
+  display: 'flex',
   margin: 20,
 };
 
 const titleStyle = {
-  cursor: "pointer",
+  cursor: 'pointer',
   margin: 20,
-  textDecoration: "underline",
+  textDecoration: 'underline',
 };

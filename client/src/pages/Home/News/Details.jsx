@@ -2,13 +2,14 @@ import { Grid } from '@mui/material';
 import axios from 'axios';
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import Comments from 'src/pages/Comments/Comments';
 import Topic from '../Topics/Topic';
 import Alert from './Alert';
 import './style.css';
 
 export default function Details() {
   const { state } = useLocation();
-  console.log(state);
+
   // const [des, setDes] = useState("");
   const [chooseTopic, setChooseTopic] = useState('');
   const [open, setOpen] = useState(false);
@@ -46,7 +47,6 @@ export default function Details() {
         content: chooseTopic,
       }
     );
-    console.log('testadasdasd', result.data.data);
 
     setNewTopic(result.data.data);
     setOpen(false);
@@ -75,6 +75,7 @@ export default function Details() {
           handleAgreed={handleAgreed}
         />
       )}
+      <Comments postId={state._id} />
     </div>
   );
 }

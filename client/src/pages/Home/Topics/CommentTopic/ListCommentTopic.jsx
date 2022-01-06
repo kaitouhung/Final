@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import TheTopicComment from "./TheTopicComment";
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import TheTopicComment from './TheTopicComment';
 
 function ListCommentTopic({ topic, comment }) {
   const [listTopicComments, setListTopicComments] = useState([]);
   useEffect(() => {
-    console.log("agian");
     getTopicComments();
   }, [topic]);
 

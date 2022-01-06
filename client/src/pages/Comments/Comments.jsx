@@ -10,7 +10,7 @@ import Http from 'src/utils/http';
 import { unauthorize } from '../Auth/auth.slice';
 import './comments.css';
 
-export default function Comments() {
+export default function Comments({ postId }) {
   const [backendComments, setBackendComments] = useState([]);
   const [activeComment, setActiveComment] = useState(null);
   const socket = useRef();
@@ -45,6 +45,7 @@ export default function Comments() {
         // userId: userId,
         parentId,
         content: text,
+        postId: postId,
       };
 
       const commentResponse = await new Http(
@@ -123,42 +124,61 @@ export default function Comments() {
   };
 
   useEffect(() => {
+    let isMounted = true;
+
     socket.current = io('ws://localhost:8900');
 
     socket.current.emit('join-room-postId', { postId: '1' });
 
     socket.current.on('new-comment', (newComment) => {
-      setBackendComments((backendComments) => [newComment, ...backendComments]);
+      if (isMounted) {
+        setBackendComments((backendComments) => [
+          newComment,
+          ...backendComments,
+        ]);
+      }
     });
 
     socket.current.on('delete-commentId', (commentId) => {
-      setBackendComments((backendComments) =>
-        backendComments.filter(
-          (backendComment) => backendComment._id !== commentId
-        )
-      );
+      if (isMounted) {
+        setBackendComments((backendComments) =>
+          backendComments.filter(
+            (backendComment) => backendComment._id !== commentId
+          )
+        );
+      }
     });
 
     socket.current.on('update-newcomment', (newComment) => {
-      setBackendComments((backendComments) => {
-        const index = backendComments.findIndex(
-          (backendComment) => backendComment._id === newComment._id
-        );
-        backendComments[index].content = newComment.content;
+      if (isMounted) {
+        setBackendComments((backendComments) => {
+          const index = backendComments.findIndex(
+            (backendComment) => backendComment._id === newComment._id
+          );
+          backendComments[index].content = newComment.content;
 
-        return [...backendComments];
-      });
+          return [...backendComments];
+        });
+      }
     });
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   useEffect(() => {
+    let unmounted = false;
+
     const fetchData = async () => {
       try {
         const commentList = await new Http(process.env.REACT_APP_API_Query).get(
-          '?postId=1'
+          `?postId=${postId}`
         );
 
-        setBackendComments(commentList.data);
+        if (!unmounted) {
+          setBackendComments(commentList.data);
+        }
       } catch (error) {
         toast.error(error.message, {
           position: 'top-right',
@@ -166,7 +186,12 @@ export default function Comments() {
         });
       }
     };
+
     fetchData();
+
+    return () => {
+      unmounted = true;
+    };
   }, []);
 
   return (

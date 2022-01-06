@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const commentSchema = new mongoose.Schema(
   {
-    postId: { type: String, default: '1' },
+    postId: { type: mongoose.SchemaTypes.ObjectId },
     topicId: { type: mongoose.SchemaTypes.ObjectId, default: null },
     userId: { type: mongoose.Schema.Types.ObjectId },
     parentId: { type: mongoose.SchemaTypes.ObjectId, default: null },
