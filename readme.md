@@ -8,6 +8,8 @@
 - Post: 3001
 - Crawl: 8000
 - Comment: 8081
+- Socket: 8900
+- Topic: 3003
 
 ## 2. Kafka Topic
 

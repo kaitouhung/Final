@@ -12,6 +12,10 @@ require('dotenv').config();
 const { authenticateEvent } = require('./../kafka/comment.consumer');
 const { checkAuthenEvent } = require('./../kafka/comment.producer');
 
+const {
+  addTopicCommentProducer,
+} = require('../producer/topic-comment.producer');
+
 // const authenticate = async (req, res, next) => {
 //   const token = req.header('authorization');
 
@@ -99,6 +103,13 @@ const getCommentPost = async (req, res, next) => {
 const updateComment = async (req, res, next) => {
   try {
     const { id } = req.params;
+
+    const { content } = req.body;
+
+    if (content.length < 0 || !content.length) {
+      return next(new AppError('Content is too short', 500));
+    }
+
     const comment = await Comment.findByIdAndUpdate(
       id,
       {
@@ -144,10 +155,43 @@ const deleteComment = async (req, res, next) => {
   }
 };
 
+const getTopicComments = async (req, res, next) => {
+  try {
+    const { postId, topicId } = req.query;
+    const commentList = await Comment.find({ postId, topicId });
+
+    if (!commentList) {
+      return new AppError('PostId invalid, Not found comment list', 500);
+    }
+
+    return res.status(200).json({
+      status: 'Get All Commet By postId successful',
+      data: commentList,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const addTopicComment = async (req, res, next) => {
+  try {
+    const comment = await new Comment(req.body).save();
+    addTopicCommentProducer(comment);
+    return res.status(200).json({
+      status: 'Create Comment Successful',
+      data: comment,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   addComment,
   getCommentPost,
   updateComment,
   deleteComment,
   authenticate,
+  getTopicComments,
+  addTopicComment,
 };

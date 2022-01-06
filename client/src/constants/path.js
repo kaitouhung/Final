@@ -5,5 +5,6 @@ export const path = {
   test: '/test',
   comments: '/comments',
   users: '/users',
+  newsDetaill: '/news-details',
   notFound: '*',
 };

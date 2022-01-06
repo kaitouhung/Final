@@ -1,8 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
 require('dotenv').config();
-const { rootRouter } = require('./routes');
+const rootRouter = require('./routes');
 const cors = require('cors');
+const queryRouter = require('./routes/index.js');
 const {
   updateUserStatusConsumer,
   seedingAdminAccountConsumer,
@@ -23,8 +24,14 @@ const {
 } = require('./kafka-comment/comment.consumer');
 
 const { checkAuthenEvent } = require('./kafka-auth/auth.producer');
+const { getTopicConsumer } = require('./consumer/topic.consumer.js');
+const {
+  addTopicCommentConsumer,
+} = require('./consumer/topic-comment.consumer.js');
 
 const app = express();
+app.use(express.json());
+app.use(cors());
 
 app.get('/authen', (req, res, next) => {
   const tokenService =
@@ -39,6 +46,8 @@ app.get('/authen', (req, res, next) => {
 
 app.use(cors());
 app.use(express.json());
+
+app.use(queryRouter);
 
 app.use('/api/v1', rootRouter);
 
@@ -67,10 +76,12 @@ app.listen(process.env.PORT, () => {
     .catch((err) => {
       console.log(err);
     });
+
+  // crawl
   // updateUserStatusConsumer();
   // seedingAdminAccountConsumer();
-  // createPostConsumer();
-  // crawlNewsConsumer();
+  createPostConsumer();
+  crawlNewsConsumer();
 
   // auth
   signupEvent();
@@ -81,4 +92,11 @@ app.listen(process.env.PORT, () => {
   addCommentEvent();
   updateCommentEvent();
   deleteCommentEvent();
+  authenticateEvent();
+
+  //topic
+  getTopicConsumer();
+
+  //comment
+  addTopicCommentConsumer();
 });

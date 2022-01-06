@@ -1,7 +1,6 @@
 const cloudinary = require('cloudinary').v2;
 require('dotenv').config();
 
-const { UserCloud } = require('./../models/userCloud.model');
 // const AppError = require('./../utils/appError');
 
 cloudinary.config({

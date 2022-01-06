@@ -6,8 +6,9 @@ import UnauthenticatedGuard from './guards/UnauthenticatedGuard';
 import Login from './pages/Auth/Login/Login';
 import Register from './pages/Auth/Register/Register';
 import Comments from './pages/Comments/Comments';
+import Home from './pages/Home/Home';
+import Details from './pages/Home/News/Details';
 import NotFound from './pages/NotFound/NotFound';
-import Test from './pages/Test/Test';
 import User from './pages/User/User';
 
 export default function RoutesComponent() {
@@ -29,7 +30,10 @@ export default function RoutesComponent() {
           </UnauthenticatedGuard>
         }
       ></Route>
-      <Route path={path.test} element={<Test></Test>}></Route>
+
+      <Route path={path.home} element={<Home></Home>}></Route>
+      <Route path="/news-details/:id" element={<Details></Details>}></Route>
+
       <Route path={path.comments} element={<Comments></Comments>}></Route>
       <Route
         path={path.users}

@@ -15,4 +15,7 @@ router.delete(
   commentController.deleteComment
 );
 
+router.get('/topic-comments', commentController.getTopicComments);
+router.post('/topic-comments', commentController.addTopicComment);
+
 module.exports = router;

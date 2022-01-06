@@ -1,5 +1,4 @@
 const User = require('./../models/user.model');
-const { UserCloud } = require('./../models/userCloud.model');
 const AppError = require('./../utils/appError');
 const bcrypt = require('bcryptjs');
 const { updateUserEvent } = require('./../kafka/auth.producer');
