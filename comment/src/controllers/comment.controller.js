@@ -1,20 +1,21 @@
-const Comment = require('../models/comment.model');
-const AppError = require('../utils/appError');
+const Comment = require("../models/comment.model");
+const mongoose = require("mongoose");
+const AppError = require("../utils/appError");
 const {
   addCommentEvent,
   updateCommentEvent,
   deleteCommentEvent,
-} = require('./../kafka/comment.producer');
+} = require("./../kafka/comment.producer");
 
-const axios = require('axios');
-require('dotenv').config();
+const axios = require("axios");
+require("dotenv").config();
 
-const { authenticateEvent } = require('./../kafka/comment.consumer');
-const { checkAuthenEvent } = require('./../kafka/comment.producer');
+const { authenticateEvent } = require("./../kafka/comment.consumer");
+const { checkAuthenEvent } = require("./../kafka/comment.producer");
 
 const {
   addTopicCommentProducer,
-} = require('../producer/topic-comment.producer');
+} = require("../producer/topic-comment.producer");
 
 // const authenticate = async (req, res, next) => {
 //   const token = req.header('authorization');
@@ -36,23 +37,23 @@ const {
 // };
 
 const authenticate = async (req, res, next) => {
-  const token = req.header('authorization')?.split(' ')[1];
+  const token = req.header("authorization")?.split(" ")[1];
   if (!token) {
-    return next(new AppError('You are not logged in!', 401));
+    return next(new AppError("You are not logged in!", 401));
   }
 
   try {
     const user = await axios.get(`${process.env.URL_TOKEN}/${token}`);
 
     if (!user) {
-      return next(new AppError('Token invalid or expires!', 401));
+      return next(new AppError("Token invalid or expires!", 401));
     }
 
     req.user = user.data.data;
 
     next();
   } catch (error) {
-    return next(new AppError('Token invalid or expires!', 401));
+    return next(new AppError("Token invalid or expires!", 401));
     // next(error);
   }
 };
@@ -62,7 +63,7 @@ const addComment = async (req, res, next) => {
     const { content } = req.body;
 
     if (content.length < 0 || !content.length) {
-      return next(new AppError('Content is too short', 500));
+      return next(new AppError("Content is too short", 500));
     }
 
     const comment = await new Comment({
@@ -73,7 +74,7 @@ const addComment = async (req, res, next) => {
     addCommentEvent(comment);
 
     return res.status(200).json({
-      status: 'Create Comment Successful',
+      status: "Create Comment Successful",
       data: comment,
       // user: user,
     });
@@ -88,11 +89,11 @@ const getCommentPost = async (req, res, next) => {
     const commentList = await Comment.find({ postId }).sort({ createdAt: -1 });
 
     if (!commentList) {
-      return next(new AppError('PostId invalid, Not found comment list', 500));
+      return next(new AppError("PostId invalid, Not found comment list", 500));
     }
 
     return res.status(200).json({
-      status: 'Get All Commet By postId successful',
+      status: "Get All Commet By postId successful",
       data: commentList,
     });
   } catch (error) {
@@ -107,7 +108,7 @@ const updateComment = async (req, res, next) => {
     const { content } = req.body;
 
     if (content.length < 0 || !content.length) {
-      return next(new AppError('Content is too short', 500));
+      return next(new AppError("Content is too short", 500));
     }
 
     const comment = await Comment.findByIdAndUpdate(
@@ -121,13 +122,13 @@ const updateComment = async (req, res, next) => {
     );
 
     if (!comment) {
-      return next(new AppError('Id invalid ', 500));
+      return next(new AppError("Id invalid ", 500));
     }
 
     updateCommentEvent(comment);
 
     return res.status(200).json({
-      status: 'Update Comment Success',
+      status: "Update Comment Success",
       data: comment,
     });
   } catch (error) {
@@ -147,25 +148,28 @@ const deleteComment = async (req, res, next) => {
     deleteCommentEvent(id);
 
     return res.status(200).json({
-      status: 'Delete comment successful',
+      status: "Delete comment successful",
       data: comment[0],
     });
   } catch (error) {
-    return next(new AppError('Id invalid ', 500));
+    return next(new AppError("Id invalid ", 500));
   }
 };
 
 const getTopicComments = async (req, res, next) => {
   try {
     const { postId, topicId } = req.query;
-    const commentList = await Comment.find({ postId, topicId });
+    const commentList = await Comment.find({
+      postId: mongoose.mongo.ObjectId(postId),
+      topicId: mongoose.mongo.ObjectId(topicId),
+    });
 
     if (!commentList) {
-      return new AppError('PostId invalid, Not found comment list', 500);
+      return new AppError("PostId invalid, Not found comment list", 500);
     }
 
     return res.status(200).json({
-      status: 'Get All Commet By postId successful',
+      status: "Get All Commet By postId successful",
       data: commentList,
     });
   } catch (error) {
@@ -178,10 +182,11 @@ const addTopicComment = async (req, res, next) => {
     const comment = await new Comment(req.body).save();
     addTopicCommentProducer(comment);
     return res.status(200).json({
-      status: 'Create Comment Successful',
+      status: "Create Comment Successful",
       data: comment,
     });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };

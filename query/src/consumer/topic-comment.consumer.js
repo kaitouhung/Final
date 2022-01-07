@@ -14,7 +14,7 @@ const addTopicCommentConsumer = async () => {
     eachMessage: async ({ topic, partition, message }) => {
       const data = JSON.parse(message.value.toString());
       await models.Comment.create({ ...data });
-      console.log("create topic comment successfull");
+      console.log({ message: "create topic comment successfull" });
     },
   });
 };

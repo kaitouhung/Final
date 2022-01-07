@@ -1,29 +1,20 @@
-const express = require('express');
-
-const commentRouter = require('./comment.route');
-
+const express = require("express");
 const router = express.Router();
-const models = require('./../db/index.js');
-const topicRouter = require('./topic/index.js');
-const topicCommentsRouter = require('./comment/topicComments/index.js');
+const models = require("./../db/index.js");
+const topicRouter = require("./topic/index.js");
+const topicCommentsRouter = require("./comment/topicComments/index.js");
 
-router.use('/comments', commentRouter);
-
-// module.exports = {
-//   rootRouter,
-// };
-
-router.get('/categorys', async (req, res, next) => {
+router.get("/categorys", async (req, res, next) => {
   try {
-    const category = await models.Post.distinct('category');
+    const category = await models.Post.distinct("category");
     res.status(200).send({ data: category });
   } catch (error) {
     console.log(error);
   }
 });
-router.get('/posts', async (req, res, next) => {
+router.get("/posts", async (req, res, next) => {
   try {
-    const { category = '', page = 1, limit = 10 } = req.query;
+    const { category = "", page = 1, limit = 10 } = req.query;
 
     const skip = (Number(page) - 1) * Number(limit);
 
@@ -41,11 +32,12 @@ router.get('/posts', async (req, res, next) => {
     const totalPages = Math.ceil(totalPosts / limit);
     res.status(200).send({ data: posts, totalPages });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 });
 
-router.use('/topic', topicRouter);
-router.use('/topic-comments', topicCommentsRouter);
+router.use("/topic", topicRouter);
+router.use("/topic-comments", topicCommentsRouter);
 
 module.exports = router;
