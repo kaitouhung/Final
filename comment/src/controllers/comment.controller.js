@@ -1,5 +1,4 @@
 const Comment = require("../models/comment.model");
-const mongoose = require("mongoose");
 const AppError = require("../utils/appError");
 const {
   addCommentEvent,
@@ -159,10 +158,7 @@ const deleteComment = async (req, res, next) => {
 const getTopicComments = async (req, res, next) => {
   try {
     const { postId, topicId } = req.query;
-    const commentList = await Comment.find({
-      postId: mongoose.mongo.ObjectId(postId),
-      topicId: mongoose.mongo.ObjectId(topicId),
-    });
+    const commentList = await Comment.find({ postId, topicId });
 
     if (!commentList) {
       return new AppError("PostId invalid, Not found comment list", 500);
