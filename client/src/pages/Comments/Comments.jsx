@@ -128,7 +128,7 @@ export default function Comments({ postId }) {
 
     socket.current = io('ws://localhost:8900');
 
-    socket.current.emit('join-room-postId', { postId: '1' });
+    socket.current.emit('join-room-postId', { postId: postId });
 
     socket.current.on('new-comment', (newComment) => {
       if (isMounted) {

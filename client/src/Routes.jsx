@@ -1,5 +1,6 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
+import Header from './components/Header/Header';
 import { path } from './constants/path';
 import AuthenticatedGuard from './guards/AuthenticatedGuard';
 import UnauthenticatedGuard from './guards/UnauthenticatedGuard';
@@ -43,6 +44,7 @@ export default function RoutesComponent() {
           </AuthenticatedGuard>
         }
       ></Route>
+      <Route path="/headers" element={<Header></Header>}></Route>
       <Route path={path.notFound} element={<NotFound></NotFound>}></Route>
     </Routes>
   );
