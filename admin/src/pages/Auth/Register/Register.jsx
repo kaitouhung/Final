@@ -1,0 +1,193 @@
+import { yupResolver } from '@hookform/resolvers/yup';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { Link as MuiLink } from '@mui/material';
+import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import CssBaseline from '@mui/material/CssBaseline';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
+import { unwrapResult } from '@reduxjs/toolkit';
+import React from 'react';
+import { useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
+import { Link, useHistory } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import Background from 'src/assets/img/login_register.jpg';
+import InputPassword from 'src/components/InputPassword/InputPassword';
+import InputText from 'src/components/InputText/InputText';
+import { path } from 'src/constants/path';
+import * as yup from 'yup';
+import { register } from '../auth.slice';
+
+export default function Register() {
+  const schema = yup
+    .object({
+      email: yup
+        .string()
+        .trim('Please enter your email')
+        .required('Please enter your email.')
+        .email('Please enter a valid email address.'),
+      password: yup
+        .string()
+        .trim('Please enter your passowrd')
+        .required('Please enter your password')
+        .min(6, 'Please enter at least 6 character')
+        .max(160, 'Please enter lesser 160 character'),
+      passwordConfirm: yup
+        .string()
+        .trim('Please enter your password confirm')
+        .required('Please enter your password confirm')
+        .min(6, 'Please enter at least 6 character')
+        .max(160, 'Please enter lesser 160 character')
+        .oneOf([yup.ref('password')], 'Password does not match'),
+      fullName: yup
+        .string()
+        .required('Please enter your fullname')
+        .trim('Please enter your fullname')
+        .min(3, 'Please enter at least 6 character')
+        .max(160, 'Please enter lesser 160 character')
+        .test(
+          'should has at least two words',
+          'please enter at least two words',
+          (value) => {
+            return value.split(' ').length >= 2;
+          }
+        ),
+    })
+    .required();
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    setError,
+  } = useForm({
+    defaultValues: {
+      email: '',
+      password: '',
+      passwordConfirm: '',
+      fullName: '',
+    },
+    resolver: yupResolver(schema),
+  });
+
+  const dispatch = useDispatch();
+  const history = useHistory();
+
+  const handleRegister = async (data) => {
+    const body = {
+      email: data.email,
+      password: data.password,
+      passwordConfirm: data.passwordConfirm,
+      fullName: data.fullName,
+    };
+
+    try {
+      const res = await dispatch(register(body));
+      unwrapResult(res);
+      toast.success('Register successfully', {
+        position: 'top-right',
+        autoClose: 3000,
+      });
+      history.push(path.home);
+    } catch (error) {
+      if (error.status === 403) {
+        setError('email', {
+          type: 'server',
+          message: error.message,
+        });
+      }
+    }
+  };
+
+  return (
+    <Grid container component="main" sx={{ height: '100vh' }}>
+      <CssBaseline />
+      <Grid
+        item
+        xs={false}
+        sm={4}
+        md={7}
+        sx={{
+          backgroundImage: `url(${Background})`,
+          backgroundRepeat: 'no-repeat',
+          backgroundColor: (t) =>
+            t.palette.mode === 'light'
+              ? t.palette.grey[50]
+              : t.palette.grey[900],
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      />
+      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+        <Box
+          sx={{
+            my: 8,
+            mx: 4,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign up
+          </Typography>
+          <Box
+            component="form"
+            noValidate
+            sx={{ mt: 1, width: 1 }}
+            onSubmit={handleSubmit(handleRegister)}
+          >
+            <InputText
+              control={control}
+              name="email"
+              label="Email"
+              errors={errors}
+            />
+
+            <InputPassword
+              control={control}
+              name="password"
+              label="Password"
+              errors={errors}
+            />
+
+            <InputPassword
+              control={control}
+              name="passwordConfirm"
+              label="Confirm Password"
+              errors={errors}
+            />
+
+            <InputText
+              control={control}
+              name="fullName"
+              label="Full Name"
+              errors={errors}
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Sign Up
+            </Button>
+            <Grid container>
+              <Grid item>
+                <MuiLink component={Link} to={path.login} variant="body2">
+                  {'You have an account? Sign In'}
+                </MuiLink>
+              </Grid>
+            </Grid>
+          </Box>
+        </Box>
+      </Grid>
+    </Grid>
+  );
+}
