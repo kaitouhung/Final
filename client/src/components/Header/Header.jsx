@@ -39,24 +39,38 @@ export default function Header() {
       <Container maxWidth="xl">
         <Toolbar
           disableGutters
-          onClick={() => {
-            navigate(path.home);
-          }}
-          sx={{ cursor: 'pointer' }}
+          // onClick={() => {
+          //   navigate(path.home);
+          // }}
+          // sx={{ cursor: 'pointer' }}
         >
           <Typography
             variant="h6"
             noWrap
-            component="div"
-            sx={{ mr: 2, display: { xs: 'none' } }}
+            component={Link}
+            to={path.home}
+            sx={{
+              mr: 2,
+              display: { xs: 'none' },
+              textDecoration: 'none',
+              color: 'white',
+              curson: 'pointer',
+            }}
           >
             F-TEAM
           </Typography>
           <Typography
             variant="h6"
             noWrap
-            component="div"
-            sx={{ flexGrow: 1, display: { xs: 'flex' } }}
+            component={Link}
+            to={path.home}
+            sx={{
+              flexGrow: 1,
+              display: { xs: 'flex' },
+              textDecoration: 'none',
+              color: 'white',
+              curson: 'pointer',
+            }}
           >
             F-TEAM
           </Typography>
