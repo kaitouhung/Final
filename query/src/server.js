@@ -8,6 +8,7 @@ const {
   updateUserStatusConsumer,
   seedingAdminAccountConsumer,
   createPostConsumer,
+  updatePostConsumer,
   deletePostConsumer,
   crawlNewsConsumer,
 } = require("./consumer");
@@ -81,8 +82,9 @@ app.listen(process.env.PORT, () => {
   // crawl
   // updateUserStatusConsumer();
   // seedingAdminAccountConsumer();
-  createPostConsumer();
   crawlNewsConsumer();
+  createPostConsumer();
+  updatePostConsumer();
   deletePostConsumer();
   // auth
   signupEvent();

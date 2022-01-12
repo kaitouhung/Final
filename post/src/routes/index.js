@@ -5,6 +5,7 @@ const multer = require("multer");
 
 const {
   createPostProducer,
+  updatePostProducer,
   deletePostProducer,
 } = require("../post.producer.js");
 const router = express.Router();
@@ -95,9 +96,11 @@ router.post("/update-post", upload.single("image"), async (req, res, next) => {
         image,
         category,
         image,
-      }
-      // { new: true }
+      },
+      { new: true }
     );
+    updatePostProducer(updatePost);
+    console.log(updatePost);
     res.status(200).send({ msg: "updated successfully", image: image });
   } catch (error) {
     console.log(error);

@@ -70,6 +70,38 @@ const createPostConsumer = async () => {
   });
 };
 
+const updatePostConsumer = async () => {
+  const clientId = "query-update-post";
+  const kafka = new Kafka({
+    clientId,
+    brokers,
+  });
+  const consumer = kafka.consumer({ groupId: clientId });
+  await consumer.connect();
+  await consumer.subscribe({ topic: "update-post" });
+
+  await consumer.run({
+    eachMessage: async ({ topic, partition, message }) => {
+      const postData = JSON.parse(message.value.toString());
+      console.log(postData);
+
+      const updatePost = await Post.findOneAndUpdate(
+        { _id: postData._id },
+        {
+          title: postData.title,
+          description: postData.description,
+          content: postData.content,
+          author: postData.author,
+          image: postData.image,
+          category: postData.category,
+        },
+        { new: true }
+      );
+      console.log({ message: "Update post successfully" });
+    },
+  });
+};
+
 const deletePostConsumer = async () => {
   const clientId = "query-delete-post";
   const kafka = new Kafka({
@@ -120,4 +152,5 @@ module.exports = {
   createPostConsumer,
   crawlNewsConsumer,
   deletePostConsumer,
+  updatePostConsumer,
 };
