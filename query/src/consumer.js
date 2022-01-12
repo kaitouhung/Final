@@ -102,7 +102,6 @@ const crawlNewsConsumer = async () => {
       const findPost = await Post.findOne({
         title: newsData[randomPostIndex].title,
       });
-      console.log(newsData[0]);
       if (!findPost) {
         await Post.insertMany(newsData);
         console.log({ message: "crawl news successful" });
