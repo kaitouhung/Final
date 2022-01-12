@@ -70,7 +70,7 @@ const login = async (req, res, next) => {
     const user = await User.findOne({ email });
 
     if (!user || !user.comparePassword(password, user.password)) {
-      return next(new AppError('Incorrect email or password', 400));
+      return next(new AppError('Incorrect email or password', 403));
     }
 
     user.password = undefined;
