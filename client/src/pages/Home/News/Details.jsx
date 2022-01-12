@@ -45,6 +45,23 @@ export default function Details() {
     setDescription(newHtml);
   };
 
+  const handleUnderlineTopic = (contentData) => {
+    let result = (des || state.description).replace(
+      /; text-decoration: underline;/g,
+      ""
+    );
+
+    const start = result.indexOf(contentData) - 16;
+    const end = start + 16 + contentData.length;
+
+    const newHtml =
+      result.slice(0, start) +
+      `; text-decoration: underline;` +
+      result.slice(start, end) +
+      result.slice(end);
+    setDes(newHtml);
+  };
+
   const handleUpdateNewsContent = async (data) => {
     await axios.put(`http://localhost:3001/update-post/${state._id}`, {
       description: data,
@@ -90,6 +107,7 @@ export default function Details() {
           <p
             onMouseUp={getText}
             dangerouslySetInnerHTML={{ __html: des || state.description }}
+            // className="topic"
           />
           <p>{state.author}</p>
         </Grid>
@@ -103,6 +121,7 @@ export default function Details() {
             description={description}
             socket={socket}
             handleRemoveTopic={handleRemoveTopic}
+            handleUnderlineTopic={handleUnderlineTopic}
           />
         </Grid>
       </Grid>

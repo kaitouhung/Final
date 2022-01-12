@@ -2,7 +2,6 @@ import React from "react";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import MenuRight from "src/components/Menu/MenuRight";
-import ButtonAnswer from "./ButtonAnswer";
 
 export default function TopicComment({
   comment,
@@ -30,6 +29,7 @@ export default function TopicComment({
           <Avatar
             alt="binh"
             style={{ width: 25, height: 25, marginRight: 20 }}
+            src={comment.userData.avatar}
           />
           <Typography
             variant="body1"

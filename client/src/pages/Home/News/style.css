@@ -1,6 +1,9 @@
 .topic {
   display: inline;
 }
+/* .topic:hover {
+  text-decoration: underline;
+} */
 
 .button-border {
   position: fixed;

@@ -15,6 +15,9 @@ export default function ListTopicComments({
   handleUpdateNewsContent,
   description,
   handleSendComment,
+
+  //underline topic
+  handleUnderlineTopic,
 }) {
   const [listComments, setListComments] = useState([]);
   const [topicId, setTopicId] = useState("");
@@ -171,6 +174,8 @@ export default function ListTopicComments({
           style={{ marginTop: 20, marginRight: 20 }}
           onClick={() => {
             setTopicId(comment.data[0].topicId);
+            console.log(comment.data[0].topicContent);
+            handleUnderlineTopic(comment.data[0].topicContent);
           }}
         >
           {comment.data.map((commentChild, index) => {

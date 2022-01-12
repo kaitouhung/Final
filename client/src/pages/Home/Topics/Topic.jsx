@@ -11,6 +11,7 @@ function Topic({
   description,
   socket,
   handleRemoveTopic,
+  handleUnderlineTopic,
 }) {
   const [comment, setComment] = useState({});
 
@@ -45,6 +46,7 @@ function Topic({
         description={description}
         socket={socket}
         handleSendComment={handleSendComment}
+        handleUnderlineTopic={handleUnderlineTopic}
       />
     </div>
   );
