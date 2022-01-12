@@ -6,5 +6,7 @@ export const path = {
   comments: '/comments',
   users: '/users',
   newsDetaill: '/news-details',
+  forgot: '/forgot',
+  reset: '/reset/:resetPassword',
   notFound: '*',
 };

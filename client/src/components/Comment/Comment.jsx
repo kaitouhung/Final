@@ -207,7 +207,7 @@ export default function Comment({
           open={open}
           onClose={handleClose}
           disableEscapeKeyDown
-          // onBackdropClick={() => setOpen(false)}
+          // onBackdropClick={handleClickOpen}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >

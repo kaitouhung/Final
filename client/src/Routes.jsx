@@ -4,8 +4,10 @@ import Header from './components/Header/Header';
 import { path } from './constants/path';
 import AuthenticatedGuard from './guards/AuthenticatedGuard';
 import UnauthenticatedGuard from './guards/UnauthenticatedGuard';
+import Forgot from './pages/Auth/Forgot/Forgot';
 import Login from './pages/Auth/Login/Login';
 import Register from './pages/Auth/Register/Register';
+import Reset from './pages/Auth/Reset/Reset';
 import Comments from './pages/Comments/Comments';
 import Home from './pages/Home/Home';
 import Details from './pages/Home/News/Details';
@@ -45,6 +47,8 @@ export default function RoutesComponent() {
         }
       ></Route>
       <Route path="/headers" element={<Header></Header>}></Route>
+      <Route path={path.forgot} element={<Forgot></Forgot>}></Route>
+      <Route path={path.reset} exact element={<Reset></Reset>}></Route>
       <Route path={path.notFound} element={<NotFound></NotFound>}></Route>
     </Routes>
   );
