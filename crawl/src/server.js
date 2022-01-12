@@ -1,6 +1,7 @@
 const express = require("express");
 const axios = require("axios");
 const { crawlNewsProducer } = require("./crawl.producer");
+const mongoose = require("mongoose");
 require("dotenv").config();
 
 const app = express();
@@ -20,6 +21,7 @@ const crawlPost = async () => {
           const post = newsResponse.data.articles[i];
           if (post.author !== null && post.content !== null) {
             postListCategory.push({
+              _id: mongoose.Types.ObjectId(),
               title: post.title,
               description: post.description,
               content: post.content,

@@ -10,10 +10,10 @@ const topicSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    index: {
-      type: Object,
-      required: true,
-    },
+    // index: {
+    //   type: Object,
+    //   required: true,
+    // },
     content: {
       type: String,
       required: true,

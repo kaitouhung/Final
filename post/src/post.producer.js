@@ -18,4 +18,21 @@ const createPostProducer = async (post) => {
   await producer.disconnect();
 };
 
-module.exports = { createPostProducer };
+const updatePostProducer = async (post) => {
+  clientId = "update-post-client-id";
+  const kafka = new Kafka({
+    clientId,
+    brokers,
+  });
+
+  const producer = await kafka.producer();
+
+  await producer.connect();
+  await producer.send({
+    topic: "update-post",
+    messages: [{ value: JSON.stringify(post) }],
+  });
+  await producer.disconnect();
+};
+
+module.exports = { createPostProducer, updatePostProducer };
