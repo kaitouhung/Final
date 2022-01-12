@@ -42,7 +42,27 @@ const removeTopicCommentConsumer = async () => {
   });
 };
 
+const removeATopicCommentConsumer = async () => {
+  const clientId = "remove-a-comment-of-topic";
+  const kafka = new Kafka({ clientId, brokers });
+
+  const consumer = kafka.consumer({ groupId: clientId });
+
+  await consumer.connect();
+  await consumer.subscribe({ topic: clientId, fromBeginning: true });
+
+  await consumer.run({
+    eachMessage: async ({ topic, partition, message }) => {
+      const commentId = message.value.toString();
+      console.log(commentId);
+      await models.Comment.findByIdAndDelete(commentId);
+      console.log({ message: "remove a comment of topic successfull" });
+    },
+  });
+};
+
 module.exports = {
   addTopicCommentConsumer,
   removeTopicCommentConsumer,
+  removeATopicCommentConsumer,
 };

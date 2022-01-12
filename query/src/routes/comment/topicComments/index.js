@@ -10,7 +10,7 @@ router.get("/", async (req, res, next) => {
       {
         $match: {
           postId: mongoose.mongo.ObjectId(postId),
-          // topicId: mongoose.mongo.ObjectId(topicId),
+          topicId: { $exists: true },
         },
       },
       {

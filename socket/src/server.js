@@ -33,8 +33,9 @@ io.on("connection", (socket) => {
     socket.on("add-topic-comment", (newComment) => {
       socket.broadcast.to(postId).emit("new-topic-comment", newComment);
     });
-    socket.on("remove-topic-comment", (commentId) => {
-      socket.broadcast.to(postId).emit("remove-topic-comment-id", commentId);
+
+    socket.on("remove-topic-comment", (comment) => {
+      socket.broadcast.to(postId).emit("remove-topic-comment-id", comment);
     });
     socket.on("update-topic-comment", (commentId) => {
       socket.broadcast.to(postId).emit("update-topic-comment-id", commentId);

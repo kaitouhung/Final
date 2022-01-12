@@ -4,9 +4,12 @@ import Typography from "@mui/material/Typography";
 import MenuRight from "src/components/Menu/MenuRight";
 import ButtonAnswer from "./ButtonAnswer";
 
-export default function TopicComment({ comment, handleDeleteTopic }) {
+export default function TopicComment({
+  comment,
+  handleDeleteTopic,
+  handleDeleteTopicComment,
+}) {
   const user = JSON.parse(localStorage.getItem("user"));
-  console.log(comment);
   return (
     <div
       style={{
@@ -52,13 +55,13 @@ export default function TopicComment({ comment, handleDeleteTopic }) {
             {comment.content}
           </Typography>
         </div>
-        <ButtonAnswer />
       </div>
       <div style={{ flex: 1 }}>
         {comment.userData._id === user._id && (
           <MenuRight
             options={["Xóa"]}
             handleDeleteTopic={handleDeleteTopic}
+            handleDeleteTopicComment={handleDeleteTopicComment}
             comment={comment}
           />
         )}

@@ -79,7 +79,6 @@ export default function Details() {
   return (
     <div>
       <Grid container spacing={2}>
-        {/* <div style={{ height: "100%" }}> */}
         <div className="button-border">
           {chooseTopic.length > 0 && (
             <ButtonHandle handleCreateTopicComment={handleCreateTopicComment} />
@@ -94,8 +93,6 @@ export default function Details() {
           />
           <p>{state.author}</p>
         </Grid>
-        {/* </div> */}
-
         <Grid item xs={5}>
           <Topic
             postId={state._id}

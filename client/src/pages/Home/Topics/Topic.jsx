@@ -30,13 +30,21 @@ function Topic({
           description={description}
           socket={socket}
           handleSendComment={handleSendComment}
+          type="new-topic"
+          topicId=""
         />
       )}
       <ListTopicComments
         postId={postId}
         socket={socket}
         newComment={comment}
+        content={content}
         handleRemoveTopic={handleRemoveTopic}
+        handleAfterCreateTopicComment={handleAfterCreateTopicComment}
+        handleUpdateNewsContent={handleUpdateNewsContent}
+        description={description}
+        socket={socket}
+        handleSendComment={handleSendComment}
       />
     </div>
   );

@@ -21,5 +21,9 @@ router.delete(
   "/comments-of-topic/:id",
   commentController.removeCommentsOfTopic
 );
+router.delete(
+  "/a-comment-of-topic/:id",
+  commentController.removeACommentOfTopic
+);
 
 module.exports = router;
