@@ -12,6 +12,7 @@ const crawlNewsConsumer = async () => {
   await consumer.run({
     eachMessage: async ({ topic, partition, message }) => {
       const newsData = JSON.parse(message.value.toString());
+      console.log(newsData[0]);
       const randomPostIndex = Math.floor(Math.random() * newsData.length) - 1;
       const findPost = await Post.findOne({
         title: newsData[randomPostIndex].title,

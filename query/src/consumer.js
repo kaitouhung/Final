@@ -69,6 +69,25 @@ const createPostConsumer = async () => {
   });
 };
 
+const updatePostConsumer = async () => {
+  const clientId = "query-update-post";
+  const kafka = new Kafka({
+    clientId,
+    brokers,
+  });
+  const consumer = kafka.consumer({ groupId: clientId });
+  await consumer.connect();
+  await consumer.subscribe({ topic: "update-post" });
+
+  await consumer.run({
+    eachMessage: async ({ topic, partition, message }) => {
+      const postData = JSON.parse(message.value.toString());
+      await Post.findByIdAndUpdate(postData._id, { $set: postData });
+      console.log({ message: "update post successfully" });
+    },
+  });
+};
+
 const crawlNewsConsumer = async () => {
   const clientId = "crawl-news-client-id-query";
   const kafka = new Kafka({ clientId, brokers });
@@ -83,6 +102,7 @@ const crawlNewsConsumer = async () => {
       const findPost = await Post.findOne({
         title: newsData[randomPostIndex].title,
       });
+      console.log(newsData[0]);
       if (!findPost) {
         await Post.insertMany(newsData);
         console.log({ message: "crawl news successful" });
@@ -98,4 +118,5 @@ module.exports = {
   seedingAdminAccountConsumer,
   createPostConsumer,
   crawlNewsConsumer,
+  updatePostConsumer,
 };
