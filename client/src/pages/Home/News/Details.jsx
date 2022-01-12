@@ -17,6 +17,7 @@ export default function Details() {
   const [chooseTopic, setChooseTopic] = useState("");
   const [create, setCreate] = useState(false);
 
+  const user = JSON.parse(localStorage.getItem("user"));
   useEffect(() => {
     socket.emit("join-room-postId", { postId: state._id });
   }, [socket]);
@@ -112,17 +113,19 @@ export default function Details() {
           <p>{state.author}</p>
         </Grid>
         <Grid item xs={5}>
-          <Topic
-            postId={state._id}
-            create={create}
-            content={chooseTopic}
-            handleAfterCreateTopicComment={handleAfterCreateTopicComment}
-            handleUpdateNewsContent={handleUpdateNewsContent}
-            description={description}
-            socket={socket}
-            handleRemoveTopic={handleRemoveTopic}
-            handleUnderlineTopic={handleUnderlineTopic}
-          />
+          {user && (
+            <Topic
+              postId={state._id}
+              create={create}
+              content={chooseTopic}
+              handleAfterCreateTopicComment={handleAfterCreateTopicComment}
+              handleUpdateNewsContent={handleUpdateNewsContent}
+              description={description}
+              socket={socket}
+              handleRemoveTopic={handleRemoveTopic}
+              handleUnderlineTopic={handleUnderlineTopic}
+            />
+          )}
         </Grid>
       </Grid>
 

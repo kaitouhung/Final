@@ -53,6 +53,7 @@ export default function AddTopicComment({
             _id: user._id,
             email: user.email,
             fullName: user.fullName,
+            avatar: user.avatar,
           },
         }
       );
@@ -63,6 +64,7 @@ export default function AddTopicComment({
           _id: user._id,
           email: user.email,
           fullName: user.fullName,
+          avatar: user.avatar,
         },
         topicContent: content,
       });
@@ -72,6 +74,7 @@ export default function AddTopicComment({
           _id: user._id,
           email: user.email,
           fullName: user.fullName,
+          avatar: user.avatar,
         },
         topicContent: content,
       });

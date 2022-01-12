@@ -44,7 +44,6 @@ function Topic({
         handleAfterCreateTopicComment={handleAfterCreateTopicComment}
         handleUpdateNewsContent={handleUpdateNewsContent}
         description={description}
-        socket={socket}
         handleSendComment={handleSendComment}
         handleUnderlineTopic={handleUnderlineTopic}
       />
