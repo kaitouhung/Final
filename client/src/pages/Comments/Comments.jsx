@@ -20,6 +20,7 @@ export default function Comments({ postId }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const profile = useSelector((state) => state.auth.profile);
+  console.log(profile);
   const userId = profile?._id || null;
 
   const rootComments = backendComments.filter(

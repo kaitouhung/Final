@@ -13,6 +13,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import Header from 'src/components/Header/Header';
 import { path } from 'src/constants/path';
 import { unauthorize, uploadAvatar } from '../Auth/auth.slice';
 
@@ -64,104 +65,106 @@ export default function User() {
   };
 
   return (
-    <Grid container component="main" sx={{ height: '100vh' }}>
-      <CssBaseline />
-      <Grid item xs={false} sm={4} md={7}>
-        <Stack
-          direction="column"
-          justifyContent="center"
-          alignItems="center"
-          spacing={3}
-          component="form"
-          m={10}
-          onSubmit={handleSubmit(uploadImage)}
-        >
-          <Box
-            component="img"
-            sx={{
-              height: 233,
-              width: 350,
-              maxHeight: { xs: 233, md: 167 },
-              maxWidth: { xs: 350, md: 250 },
-            }}
-            alt="The house from the offer."
-            src={imagePre}
-          />
-          <Controller
-            name="uploadImage"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                // accept="audio/*,video/*,image/*"
-                inputProps={{ accept: 'image/png, image/gif, image/jpeg' }}
-                name="uploadImage"
-                autoFocus
-                onChange={(event) => {
-                  field.onChange(event.target.files[0]);
-                  const reader = new FileReader();
-                  reader.onload = () => {
-                    if (reader.readyState === 2) {
-                      setImagePre(reader.result);
-                    }
-                  };
-                  reader.readAsDataURL(event.target.files[0]);
-                }}
-                // value={field.value}
-                onBlur={field.onBlur}
-                type="file"
-                width="50%"
-              />
-            )}
-          />
-
-          <Button
-            type="submit"
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-            width="50%"
-          >
-            Upload Avatar
-          </Button>
-        </Stack>
-      </Grid>
-      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-        <Box
-          sx={{
-            my: 8,
-            mx: 4,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography
-            component="h1"
-            variant="h5"
-            sx={{
-              mt: 3,
-            }}
-          >
-            Upload Avatar
-          </Typography>
-          <Typography
-            component="h1"
-            variant="h5"
-            sx={{
-              mt: 3,
-            }}
-          >
-            FullName: {profile?.fullName}
-          </Typography>
-          <Box
+    <div>
+      <Header />
+      <Grid container component="main" sx={{ height: '100vh' }}>
+        <CssBaseline />
+        <Grid item xs={false} sm={4} md={7}>
+          <Stack
+            direction="column"
+            justifyContent="center"
+            alignItems="center"
+            spacing={3}
             component="form"
-            noValidate
-            sx={{ mt: 1, width: 1 }}
-            // onSubmit={handleSubmit(handleLogin)}
+            m={10}
+            onSubmit={handleSubmit(uploadImage)}
           >
-            {/* <Button
+            <Box
+              component="img"
+              sx={{
+                height: 233,
+                width: 350,
+                maxHeight: { xs: 233, md: 167 },
+                maxWidth: { xs: 350, md: 250 },
+              }}
+              alt="The house from the offer."
+              src={imagePre}
+            />
+            <Controller
+              name="uploadImage"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  // accept="audio/*,video/*,image/*"
+                  inputProps={{ accept: 'image/png, image/gif, image/jpeg' }}
+                  name="uploadImage"
+                  autoFocus
+                  onChange={(event) => {
+                    field.onChange(event.target.files[0]);
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                      if (reader.readyState === 2) {
+                        setImagePre(reader.result);
+                      }
+                    };
+                    reader.readAsDataURL(event.target.files[0]);
+                  }}
+                  // value={field.value}
+                  onBlur={field.onBlur}
+                  type="file"
+                  width="50%"
+                />
+              )}
+            />
+
+            <Button
+              type="submit"
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+              width="50%"
+            >
+              Upload Avatar
+            </Button>
+          </Stack>
+        </Grid>
+        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+          <Box
+            sx={{
+              my: 8,
+              mx: 4,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          >
+            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography
+              component="h1"
+              variant="h5"
+              sx={{
+                mt: 3,
+              }}
+            >
+              Upload Avatar
+            </Typography>
+            <Typography
+              component="h1"
+              variant="h5"
+              sx={{
+                mt: 3,
+              }}
+            >
+              FullName: {profile?.fullName}
+            </Typography>
+            <Box
+              component="form"
+              noValidate
+              sx={{ mt: 1, width: 1 }}
+              // onSubmit={handleSubmit(handleLogin)}
+            >
+              {/* <Button
               type="submit"
               fullWidth
               variant="contained"
@@ -169,12 +172,13 @@ export default function User() {
             >
               Sign In
             </Button> */}
-            <Grid container>
-              <Grid item></Grid>
-            </Grid>
+              <Grid container>
+                <Grid item></Grid>
+              </Grid>
+            </Box>
           </Box>
-        </Box>
+        </Grid>
       </Grid>
-    </Grid>
+    </div>
   );
 }

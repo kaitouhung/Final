@@ -25,6 +25,7 @@ export default function Comment({
   // const timePassed = new Date() - new Date(comment.createdAt) > 300000;
   // const canReply = Boolean(currentUserId);
   // const canModify = currentUserId === comment.userId._id && !timePassed;
+
   const canModify = currentUserId === comment.userId._id;
 
   const createdAt = format(comment.createdAt);
