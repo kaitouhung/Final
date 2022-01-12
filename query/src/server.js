@@ -98,7 +98,7 @@ app.listen(process.env.PORT, () => {
   addCommentEvent();
   updateCommentEvent();
   deleteCommentEvent();
-  authenticateEvent();
+  // authenticateEvent();
 
   //topic
   getTopicConsumer();
