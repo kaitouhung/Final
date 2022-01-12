@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import axios from "axios";
 
 export default function AddTopicComment({
+  type,
   postId,
   create,
   content,
@@ -14,6 +15,7 @@ export default function AddTopicComment({
   handleUpdateNewsContent,
   socket,
   handleSendComment,
+  topicId,
 }) {
   const user = JSON.parse(localStorage.getItem("user"));
 
@@ -29,14 +31,15 @@ export default function AddTopicComment({
 
   const handleSend = async () => {
     if (comment) {
-      const result = await axios.post(
-        "http://localhost:3003/topic/create-topic",
-        {
-          postID: postId,
-          userID: user._id,
-          content,
-        }
-      );
+      const result =
+        type === "new-topic"
+          ? await axios.post("http://localhost:3003/topic/create-topic", {
+              postID: postId,
+              userID: user._id,
+              content,
+            })
+          : { data: { data: { _id: topicId } } };
+      console.log(1231321, topicId, result.data.data._id);
 
       const newComments = await axios.post(
         "http://localhost:8081/api/v1/comments/topic-comments",
@@ -53,7 +56,7 @@ export default function AddTopicComment({
           },
         }
       );
-      handleUpdateNewsContent(description);
+      type === "new-topic" && handleUpdateNewsContent(description);
       handleSendComment({
         ...newComments.data.data,
         userData: {
@@ -73,7 +76,7 @@ export default function AddTopicComment({
         topicContent: content,
       });
       setComment("");
-      handleAfterCreateTopicComment();
+      type === "new-topic" && handleAfterCreateTopicComment();
     }
   };
 
@@ -82,27 +85,35 @@ export default function AddTopicComment({
       {create && (
         <div
           style={{
-            margin: 10,
+            // margin: 10,
             padding: 10,
             border: "1px solid rgba(0, 0, 0, 0.08)",
             borderRadius: 15,
             backgroundColor: "rgba(0, 0, 0, 0.08)",
           }}
         >
-          <div
-            style={{ display: "flex", flexDirection: "row", marginBottom: 10 }}
-          >
-            <Avatar
-              alt="binh"
-              style={{ width: 25, height: 25, marginRight: 20 }}
-            />
-            <Typography
-              variant="body1"
-              style={{ color: "black", fontWeight: "bold" }}
+          {type === "new-topic" ? (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                marginBottom: 10,
+              }}
             >
-              {user.fullName}
-            </Typography>
-          </div>
+              <Avatar
+                alt="binh"
+                style={{ width: 25, height: 25, marginRight: 20 }}
+              />
+              <Typography
+                variant="body1"
+                style={{ color: "black", fontWeight: "bold" }}
+              >
+                {user.fullName}
+              </Typography>
+            </div>
+          ) : (
+            <></>
+          )}
           <div>
             <TextField
               style={{
@@ -113,6 +124,7 @@ export default function AddTopicComment({
                 borderRadius: 15,
               }}
               id="outlined-basic"
+              autoComplete="off"
               variant="outlined"
               placeholder="Viết nhận xét"
               onChange={handleChangeText}

@@ -30,6 +30,7 @@ const {
 const {
   addTopicCommentConsumer,
   removeTopicCommentConsumer,
+  removeATopicCommentConsumer,
 } = require("./consumer/topic-comment.consumer.js");
 const { AppError } = require("../../comment/src/utils/appError");
 
@@ -107,4 +108,5 @@ app.listen(process.env.PORT, () => {
   //comment
   addTopicCommentConsumer();
   removeTopicCommentConsumer();
+  removeATopicCommentConsumer();
 });

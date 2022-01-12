@@ -29,7 +29,22 @@ const removeTopicCommentProducer = async (topicId) => {
   await producer.disconnect();
 };
 
+const removeATopicCommentProducer = async (commentId) => {
+  const clientId = "remove-a-comment-of-topic";
+  const kafka = new Kafka({ clientId, brokers });
+
+  const producer = kafka.producer();
+
+  await producer.connect();
+  await producer.send({
+    topic: clientId,
+    messages: [{ value: commentId }],
+  });
+  await producer.disconnect();
+};
+
 module.exports = {
   addTopicCommentProducer,
   removeTopicCommentProducer,
+  removeATopicCommentProducer,
 };

@@ -1,14 +1,26 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import TopicComment from "./TopicComment";
+import AddTopicComment from "./AddTopicComment";
 
 export default function ListTopicComments({
   postId,
   socket,
   newComment,
   handleRemoveTopic,
+
+  //new
+  content,
+  handleAfterCreateTopicComment,
+  handleUpdateNewsContent,
+  description,
+  handleSendComment,
+
+  //underline topic
+  handleUnderlineTopic,
 }) {
   const [listComments, setListComments] = useState([]);
+  const [topicId, setTopicId] = useState("");
 
   useEffect(() => {
     getListComments();
@@ -28,9 +40,21 @@ export default function ListTopicComments({
     socket.emit("remove-topic", { comment });
   };
 
-  // const handleDeleteTopicComment = (commentId) => {
-  //   // setComment(data);
-  // };
+  const handleDeleteTopicComment = async (comment) => {
+    const result = listComments.map((topic) => ({
+      ...topic,
+      data: topic.data.filter((commentData) => commentData._id !== comment._id),
+    }));
+    console.log(comment, result);
+
+    await axios.delete(
+      `http://localhost:8081/api/v1/comments/a-comment-of-topic/${comment._id}`
+    );
+
+    socket.emit("remove-topic-comment", result);
+
+    setListComments(result);
+  };
 
   useEffect(() => {
     if (newComment._id) {
@@ -44,15 +68,17 @@ export default function ListTopicComments({
           },
         ]);
       } else {
-        let newTopic = false;
+        let newTopic = true;
         const result = listComments.map((comment) => {
-          if (comment.topicId === newComment.topicId) {
-            return [...comment.data, newComment];
+          if (comment.data[0].topicId === newComment.topicId) {
+            newTopic = false;
+            return { ...comment, data: [...comment.data, newComment] };
           } else {
-            newTopic = true;
+            // newTopic = true;
             return comment;
           }
         });
+        console.log(result);
         if (newTopic) {
           setListComments([
             ...listComments,
@@ -70,7 +96,7 @@ export default function ListTopicComments({
 
   useEffect(() => {
     socket.on("new-topic-comment", (data) => {
-      let newTopic = false;
+      let newTopic = true;
       if (listComments.length === 0) {
         setListComments([
           ...listComments,
@@ -82,13 +108,16 @@ export default function ListTopicComments({
         ]);
       } else {
         const result = listComments.map((comment) => {
-          if (comment.topicId === data.topicId) {
-            return [...comment.data, data];
+          if (comment.data[0].topicId === data.topicId) {
+            newTopic = false;
+            // return { ...comment, data: [...comment.data, newComment] };
+            return { ...comment, data: [...comment.data, data] };
           } else {
-            newTopic = true;
+            // newTopic = true;
             return comment;
           }
         });
+        console.log(result);
         if (newTopic) {
           setListComments([
             ...listComments,
@@ -116,6 +145,13 @@ export default function ListTopicComments({
     });
   }, [listComments]);
 
+  useEffect(() => {
+    socket.on("remove-topic-comment-id", (data) => {
+      console.log(data);
+      setListComments(data);
+    });
+  }, [listComments]);
+
   const getListComments = async () => {
     const result = await axios.get(
       `http://localhost:3004/topic-comments?postId=${postId}`
@@ -123,23 +159,50 @@ export default function ListTopicComments({
     setListComments(result.data.data);
   };
 
+  // const handleClose = () => {
+  //   setCreate(false);
+  // };
+  // const handleOpen = () => {
+  //   setCreate(true);
+  // };
+
   const RenderListComments = () => {
     return listComments.map((comment) => {
       return (
         <div
           key={Math.ceil(Math.random() * 9999999999)}
-          style={{ marginTop: 10 }}
+          style={{ marginTop: 20, marginRight: 20 }}
+          onClick={() => {
+            setTopicId(comment.data[0].topicId);
+            console.log(comment.data[0].topicContent);
+            handleUnderlineTopic(comment.data[0].topicContent);
+          }}
         >
-          {comment.data.map((commentChild) => {
-            // console.log(commentChild);
+          {comment.data.map((commentChild, index) => {
+            if (index > 0) commentChild.topicContent = "";
             return (
               <TopicComment
                 key={Math.ceil(Math.random() * 9999999999)}
                 comment={commentChild}
                 handleDeleteTopic={handleDeleteTopic}
+                handleDeleteTopicComment={handleDeleteTopicComment}
               />
             );
           })}
+          <div>
+            <AddTopicComment
+              postId={postId}
+              create={true}
+              content={content}
+              handleAfterCreateTopicComment={handleAfterCreateTopicComment}
+              handleUpdateNewsContent={handleUpdateNewsContent}
+              description={description}
+              socket={socket}
+              handleSendComment={handleSendComment}
+              topicId={topicId}
+              type="rep-comment-topic"
+            />
+          </div>
         </div>
       );
     });

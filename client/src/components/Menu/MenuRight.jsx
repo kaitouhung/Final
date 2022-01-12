@@ -6,14 +6,23 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 const ITEM_HEIGHT = 48;
 
-export default function MenuRight({ options, comment, handleDeleteTopic }) {
+export default function MenuRight({
+  options,
+  comment,
+  handleDeleteTopic,
+  handleDeleteTopicComment,
+}) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
-    handleDeleteTopic(comment);
+    comment.topicContent.length > 0
+      ? handleDeleteTopic(comment)
+      : handleDeleteTopicComment(comment);
+    console.log(comment);
     setAnchorEl(null);
   };
 

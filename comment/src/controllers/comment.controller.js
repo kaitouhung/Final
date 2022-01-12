@@ -16,6 +16,7 @@ const { checkAuthenEvent } = require("./../kafka/comment.producer");
 const {
   addTopicCommentProducer,
   removeTopicCommentProducer,
+  removeATopicCommentProducer,
 } = require("../producer/topic-comment.producer");
 
 // const authenticate = async (req, res, next) => {
@@ -205,6 +206,21 @@ const removeCommentsOfTopic = async (req, res, next) => {
     next(error);
   }
 };
+const removeACommentOfTopic = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    console.log(id);
+    const comment = await Comment.findByIdAndDelete(id);
+    removeATopicCommentProducer(id);
+    return res.status(200).json({
+      status: "remove Comment Successful",
+      data: comment,
+    });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
 
 module.exports = {
   addComment,
@@ -215,4 +231,5 @@ module.exports = {
   getTopicComments,
   addTopicComment,
   removeCommentsOfTopic,
+  removeACommentOfTopic,
 };
