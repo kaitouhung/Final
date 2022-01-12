@@ -16,6 +16,9 @@ import { unauthorize } from 'src/pages/Auth/auth.slice';
 
 export default function Header() {
   const profile = useSelector((state) => state.auth.profile);
+  const avatar =
+    profile?.avatar ||
+    'https://res.cloudinary.com/dn4nqzjpm/image/upload/v1642011504/users/ceqwv01nz6ewodzspvdn.png';
 
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -89,7 +92,7 @@ export default function Header() {
             <Box sx={{ display: 'flex', justifyContent: 'flex-start' }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src={profile.avatar} />
+                  <Avatar alt="Remy Sharp" src={avatar} />
                   <Typography
                     variant="h6"
                     component="h6"

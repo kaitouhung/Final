@@ -46,7 +46,7 @@ export default function Comment({
 
   const avatar =
     comment.userId.avatar ||
-    'https://res.cloudinary.com/mern-itachi/image/upload/v1641222036/users/hxc8yfsq3eb92efff7vs.png';
+    'https://res.cloudinary.com/dn4nqzjpm/image/upload/v1642011504/users/ceqwv01nz6ewodzspvdn.png';
 
   const [open, setOpen] = React.useState(false);
 
