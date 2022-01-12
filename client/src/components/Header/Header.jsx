@@ -37,7 +37,13 @@ export default function Header() {
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
-        <Toolbar disableGutters>
+        <Toolbar
+          disableGutters
+          onClick={() => {
+            navigate(path.home);
+          }}
+          sx={{ cursor: 'pointer' }}
+        >
           <Typography
             variant="h6"
             noWrap

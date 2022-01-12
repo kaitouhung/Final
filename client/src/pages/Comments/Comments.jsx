@@ -102,19 +102,15 @@ export default function Comments({ postId }) {
 
   const deleteComment = async (commentId) => {
     try {
-      if (window.confirm('Are you sure that you want to remove comment')) {
-        await new Http(process.env.REACT_APP_API_Comment).delete(
-          `${commentId}`
-        );
+      await new Http(process.env.REACT_APP_API_Comment).delete(`${commentId}`);
 
-        socket.current.emit('delete-comment', commentId);
+      socket.current.emit('delete-comment', commentId);
 
-        const updateBackendComments = backendComments.filter(
-          (backendComment) => backendComment._id !== commentId
-        );
+      const updateBackendComments = backendComments.filter(
+        (backendComment) => backendComment._id !== commentId
+      );
 
-        setBackendComments(updateBackendComments);
-      }
+      setBackendComments(updateBackendComments);
     } catch (error) {
       if (error.status === 401) {
         dispatch(unauthorize());
