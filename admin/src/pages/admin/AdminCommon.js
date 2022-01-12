@@ -1,21 +1,22 @@
-import React from 'react';
-import { useDispatch } from 'react-redux';
-import { Link, useHistory } from 'react-router-dom';
-import { path } from 'src/constants/path';
-import { unauthorize } from 'src/pages/Auth/auth.slice';
+import React from "react";
+import { useDispatch } from "react-redux";
+import { Link, useHistory } from "react-router-dom";
+import { path } from "src/constants/path";
+import { unauthorize } from "src/pages/Auth/auth.slice";
 
 function AdminCommon(props) {
   const history = useHistory();
 
-  //   useEffect(() => {
-  //     const token = localStorage.getItem(APP_CONSTANTS.USER_TOKEN);
-  //     if (!token) {
-  //       history.replace("/login");
-  //     }
-  //   });
+  // useEffect(() => {
+  //   const token = localStorage.getItem(APP_CONSTANTS.USER_TOKEN);
+  //   if (!token) {
+  //     history.replace("/login");
+  //   }
+  // });
   const dispatch = useDispatch();
 
   const handleLogout = () => {
+    localStorage.clear();
     dispatch(unauthorize());
     history.push(path.login);
   };
@@ -33,18 +34,10 @@ function AdminCommon(props) {
         </div>
         <div className="mt-4 lg:mt-0 w-full block flex-grow lg:flex lg:items-center lg:w-auto">
           <div className="text-sm lg:flex-grow flex items-center divide-x">
-            <Link
-              to="/admin"
+            <input
               className="block lg:inline-block lg:mt-0 text-blue-700 hover:text-blue-400 px-2"
-            >
-              Users List
-            </Link>
-            <Link
-              to="/admin/upload-photo"
-              className="block lg:inline-block lg:mt-0 text-blue-700 hover:text-blue-400 px-2"
-            >
-              Upload Photo
-            </Link>
+              type="file"
+            />
           </div>
           <div className="flex items-center" onClick={handleLogout}>
             <button className="text-sm bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded">

@@ -20,6 +20,7 @@ import InputText from 'src/components/InputText/InputText';
 import { path } from 'src/constants/path';
 import * as yup from 'yup';
 import { login } from '../auth.slice';
+import APP_CONSTANTS from "../../../constants/appConstants";
 
 export default function Login() {
   const schema = yup
@@ -67,7 +68,9 @@ export default function Login() {
         position: 'top-right',
         autoClose: 3000,
       });
-      history.push(path.home);
+      console.log(res)
+      localStorage.setItem(APP_CONSTANTS.USER_TOKEN, res.payload.data.token)
+      history.push(path.admin);
     } catch (error) {
       if (error.status === 400) {
         setError('password', {

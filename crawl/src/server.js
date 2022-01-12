@@ -37,7 +37,6 @@ const crawlPost = async () => {
 
     const postList = [].concat.apply([], postFollowCategory);
     crawlNewsProducer(postList);
-    // console.log(postList);
   } catch (err) {
     return res.status(500).json({
       status: "Error",
