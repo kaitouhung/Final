@@ -121,4 +121,24 @@ router.post("/delete-post", async (req, res, next) => {
   }
 });
 
+router.put("/update-post-des/:id", async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const { description } = req.body;
+    console.log(description);
+    const newPost = await Post.findByIdAndUpdate(
+      id,
+      {
+        $set: { description },
+      },
+      { new: true }
+    );
+    updatePostProducer(newPost);
+    res.status(200).send({ data: "newPost" });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+});
+
 module.exports = router;
