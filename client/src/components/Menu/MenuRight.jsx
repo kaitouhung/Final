@@ -22,7 +22,7 @@ export default function MenuRight({
     comment.topicContent.length > 0
       ? handleDeleteTopic(comment)
       : handleDeleteTopicComment(comment);
-    console.log(comment);
+    // console.log(comment);
     setAnchorEl(null);
   };
 

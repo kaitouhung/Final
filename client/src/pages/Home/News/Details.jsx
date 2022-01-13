@@ -64,8 +64,16 @@ export default function Details() {
     setDes(newHtml);
   };
 
+  const handleClickToDescription = () => {
+    let result = (des || state.description).replace(
+      /; text-decoration: underline;/g,
+      ""
+    );
+    setDes(result);
+  };
+
   const handleUpdateNewsContent = async (data) => {
-    await axios.put(`http://localhost:3001/update-post/${state._id}`, {
+    await axios.put(`http://localhost:3001/update-post-des/${state._id}`, {
       description: data,
     });
     setDes(data);
@@ -77,13 +85,15 @@ export default function Details() {
   const handleRemoveTopic = async (content) => {
     const start = (des || state.description).indexOf(content);
     const end = start + content.length;
+    console.log(start, start - 51);
     const newHtml =
-      (des || state.description).slice(0, start - 51) +
+      (des || state.description).slice(0, start - 51 - 29) +
       content +
       (des || state.description).slice(end + 4);
     // console.log(des, state.description);
-    // console.log(content, start, end, newHtml);
+    console.log(newHtml);
     setDes(newHtml);
+    // console.log(newHtml, content);
     handleUpdateNewsContent(newHtml);
   };
 
@@ -110,7 +120,7 @@ export default function Details() {
           <p
             onMouseUp={getText}
             dangerouslySetInnerHTML={{ __html: des || state.description }}
-            // className="topic"
+            onClick={handleClickToDescription}
           />
           <p>{state.author}</p>
         </Grid>

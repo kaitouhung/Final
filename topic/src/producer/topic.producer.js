@@ -16,5 +16,20 @@ const getTopicProducer = async (topic) => {
   });
   await producer.disconnect();
 };
+const removeTopicProducer = async (topicId) => {
+  const clientId = "remove-topic";
+  const kafka = new Kafka({
+    clientId,
+    brokers,
+  });
 
-module.exports = { getTopicProducer };
+  const producer = kafka.producer();
+  await producer.connect();
+  await producer.send({
+    topic: clientId,
+    messages: [{ value: topicId.toString() }],
+  });
+  await producer.disconnect();
+};
+
+module.exports = { getTopicProducer, removeTopicProducer };

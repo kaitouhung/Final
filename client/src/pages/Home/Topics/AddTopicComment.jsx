@@ -57,6 +57,7 @@ export default function AddTopicComment({
           },
         }
       );
+
       type === "new-topic" && handleUpdateNewsContent(description);
       handleSendComment({
         ...newComments.data.data,

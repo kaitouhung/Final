@@ -83,21 +83,8 @@ const updatePostConsumer = async () => {
   await consumer.run({
     eachMessage: async ({ topic, partition, message }) => {
       const postData = JSON.parse(message.value.toString());
-      console.log(postData);
-
-      const updatePost = await Post.findOneAndUpdate(
-        { _id: postData._id },
-        {
-          title: postData.title,
-          description: postData.description,
-          content: postData.content,
-          author: postData.author,
-          image: postData.image,
-          category: postData.category,
-        },
-        { new: true }
-      );
-      console.log({ message: "Update post successfully" });
+      await Post.findByIdAndUpdate(postData._id, { $set: postData });
+      console.log({ message: "update post successfully" });
     },
   });
 };

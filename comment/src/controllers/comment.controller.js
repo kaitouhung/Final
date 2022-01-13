@@ -13,8 +13,9 @@ const { authenticateEvent } = require("./../kafka/comment.consumer");
 const { checkAuthenEvent } = require("./../kafka/comment.producer");
 
 const {
-  addTopicCommentProducer,
+  addTopicCommentProducer, removeTopicCommentProducer, removeATopicCommentProducer,
 } = require("../producer/topic-comment.producer");
+const mongoose = require("mongoose");
 
 // const authenticate = async (req, res, next) => {
 //   const token = req.header('authorization');
@@ -187,6 +188,40 @@ const addTopicComment = async (req, res, next) => {
   }
 };
 
+const removeCommentsOfTopic = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    console.log(id);
+    const comment = await Comment.findOneAndDelete({
+      topicId: mongoose.Types.ObjectId(id),
+    });
+    removeTopicCommentProducer(id);
+    return res.status(200).json({
+      status: "remove Comment Successful",
+      data: comment,
+    });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
+const removeACommentOfTopic = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    console.log(id);
+    const comment = await Comment.findByIdAndDelete(id);
+    removeATopicCommentProducer(id);
+    return res.status(200).json({
+      status: "remove Comment Successful",
+      data: comment,
+    });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
 module.exports = {
   addComment,
   getCommentPost,
@@ -195,4 +230,6 @@ module.exports = {
   authenticate,
   getTopicComments,
   addTopicComment,
+  removeCommentsOfTopic,
+  removeACommentOfTopic,
 };

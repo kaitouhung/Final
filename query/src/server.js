@@ -26,9 +26,14 @@ const {
 } = require("./kafka-comment/comment.consumer");
 
 const { checkAuthenEvent } = require("./kafka-auth/auth.producer");
-const { getTopicConsumer } = require("./consumer/topic.consumer.js");
+const {
+  getTopicConsumer,
+  removeTopicConsumer,
+} = require("./consumer/topic.consumer.js");
 const {
   addTopicCommentConsumer,
+  removeATopicCommentConsumer,
+  removeTopicCommentConsumer,
 } = require("./consumer/topic-comment.consumer.js");
 
 const app = express();
@@ -99,7 +104,10 @@ app.listen(process.env.PORT, () => {
 
   //topic
   getTopicConsumer();
+  removeTopicConsumer();
 
   //comment
   addTopicCommentConsumer();
+  removeTopicCommentConsumer();
+  removeATopicCommentConsumer();
 });
