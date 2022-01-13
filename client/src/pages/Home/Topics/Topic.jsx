@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import AddTopicComment from "./AddTopicComment";
-import ListTopicComments from "./ListTopicComments";
+import React, { useState } from 'react';
+import AddTopicComment from './AddTopicComment';
+import ListTopicComments from './ListTopicComments';
 
 function Topic({
   postId,

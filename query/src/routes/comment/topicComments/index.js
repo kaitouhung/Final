@@ -10,7 +10,7 @@ router.get("/", async (req, res, next) => {
       {
         $match: {
           postId: mongoose.mongo.ObjectId(postId),
-          topicId: { $exists: true },
+          topicId: mongoose.mongo.ObjectId(topicId),
         },
       },
       {
@@ -33,7 +33,7 @@ router.get("/", async (req, res, next) => {
               $project: {
                 email: 1,
                 fullName: 1,
-                avatar: 1,
+                // _id: 0,
               },
             },
           ],
@@ -41,45 +41,7 @@ router.get("/", async (req, res, next) => {
         },
       },
       { $unwind: "$userData" },
-      {
-        $lookup: {
-          from: "topics",
-          let: { topic_id: "$topicId" },
-          pipeline: [
-            {
-              $match: {
-                $expr: {
-                  $and: [
-                    {
-                      $eq: ["$_id", "$$topic_id"],
-                    },
-                  ],
-                },
-              },
-            },
-            // {
-            //   $project: {
-            //     email: 1,
-            //     fullName: 1,
-            //   },
-            // },
-          ],
-          as: "topicContent",
-        },
-      },
-      { $unwind: "$topicContent" },
-      { $addFields: { topicContent: "$topicContent.content" } },
-      {
-        $group: {
-          _id: "$topicId",
-          createdAt: { $first: "$createdAt" },
-          data: {
-            $push: "$$ROOT",
-          },
-        },
-      },
-      { $sort: { createdAt: -1 } },
-    ]);
+    ]).sort({ createdAt: -1 });
     res.status(200).send({ data: result });
   } catch (error) {
     console.log(error.message);

@@ -6,7 +6,7 @@ import io from 'socket.io-client';
 import Header from 'src/components/Header/Header';
 import Comments from 'src/pages/Comments/Comments';
 import Topic from '../Topics/Topic';
-import ButtonHandle from './ButtonHandle';
+// import ButtonHandle from './ButtonHandle';
 import './style.css';
 
 const socket = io.connect('http://localhost:8900');

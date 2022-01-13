@@ -10,6 +10,7 @@
 - Comment: 8081
 - Socket: 8900
 - Topic: 3003
+- Client-Admin: 3002
 
 ## 2. Kafka Topic
 

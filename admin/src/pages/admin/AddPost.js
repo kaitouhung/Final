@@ -33,9 +33,9 @@ export default function AddPost() {
         },
       });
       const response = await axiosClient.post("", formData);
-      console.log(response.status);
 
       history.replace("/admin");
+      // window.location.reload(false);
     } catch (error) {
       console.log(error);
     }
@@ -82,6 +82,7 @@ export default function AddPost() {
                       <input
                         type="text"
                         name="title"
+                        required
                         value={formValue.title}
                         onChange={handleChange}
                         className="border border-gray-400 rounded-md focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300"
@@ -98,6 +99,7 @@ export default function AddPost() {
                       <input
                         type="text"
                         name="description"
+                        required
                         value={formValue.description}
                         onChange={handleChange}
                         className="border border-gray-400 rounded-md focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300"
@@ -116,6 +118,7 @@ export default function AddPost() {
                   <div className="mt-1">
                     <textarea
                       name="content"
+                      required
                       value={formValue.content}
                       onChange={handleChange}
                       rows="3"
@@ -132,6 +135,7 @@ export default function AddPost() {
                       <input
                         type="text"
                         name="author"
+                        required
                         value={formValue.author}
                         onChange={handleChange}
                         className="border border-gray-400 rounded-md focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300"
@@ -148,6 +152,7 @@ export default function AddPost() {
                       <input
                         type="text"
                         name="category"
+                        required
                         value={formValue.category}
                         onChange={handleChange}
                         className="border border-gray-400 rounded-md focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300"
@@ -186,6 +191,7 @@ export default function AddPost() {
                             id="file-upload"
                             name="image"
                             type="file"
+                            required
                             // className="sr-only"
                             onChange={handleChangeImage}
                           />

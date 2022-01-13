@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import Avatar from "@mui/material/Avatar";
-import Typography from "@mui/material/Typography";
-import axios from "axios";
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 
 export default function AddTopicComment({
   type,
@@ -17,9 +17,9 @@ export default function AddTopicComment({
   handleSendComment,
   topicId,
 }) {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = JSON.parse(localStorage.getItem('user'));
 
-  const [comment, setComment] = useState("");
+  const [comment, setComment] = useState('');
 
   useEffect(() => {
     if (!content) handleAfterCreateTopicComment();
@@ -32,8 +32,8 @@ export default function AddTopicComment({
   const handleSend = async () => {
     if (comment) {
       const result =
-        type === "new-topic"
-          ? await axios.post("http://localhost:3003/topic/create-topic", {
+        type === 'new-topic'
+          ? await axios.post('http://localhost:3003/topic/create-topic', {
               postID: postId,
               userID: user._id,
               content,
@@ -42,7 +42,7 @@ export default function AddTopicComment({
       console.log(1231321, topicId, result.data.data._id);
 
       const newComments = await axios.post(
-        "http://localhost:8081/api/v1/comments/topic-comments",
+        'http://localhost:8081/api/v1/comments/topic-comments',
         {
           postId: postId,
           topicId: result.data.data._id,
@@ -57,7 +57,7 @@ export default function AddTopicComment({
           },
         }
       );
-      type === "new-topic" && handleUpdateNewsContent(description);
+      type === 'new-topic' && handleUpdateNewsContent(description);
       handleSendComment({
         ...newComments.data.data,
         userData: {
@@ -68,7 +68,7 @@ export default function AddTopicComment({
         },
         topicContent: content,
       });
-      socket.emit("add-topic-comment", {
+      socket.emit('add-topic-comment', {
         ...newComments.data.data,
         userData: {
           _id: user._id,
@@ -78,8 +78,8 @@ export default function AddTopicComment({
         },
         topicContent: content,
       });
-      setComment("");
-      type === "new-topic" && handleAfterCreateTopicComment();
+      setComment('');
+      type === 'new-topic' && handleAfterCreateTopicComment();
     }
   };
 
@@ -90,16 +90,16 @@ export default function AddTopicComment({
           style={{
             // margin: 10,
             padding: 10,
-            border: "1px solid rgba(0, 0, 0, 0.08)",
+            border: '1px solid rgba(0, 0, 0, 0.08)',
             borderRadius: 15,
-            backgroundColor: "rgba(0, 0, 0, 0.08)",
+            backgroundColor: 'rgba(0, 0, 0, 0.08)',
           }}
         >
-          {type === "new-topic" ? (
+          {type === 'new-topic' ? (
             <div
               style={{
-                display: "flex",
-                flexDirection: "row",
+                display: 'flex',
+                flexDirection: 'row',
                 marginBottom: 10,
               }}
             >
@@ -109,7 +109,7 @@ export default function AddTopicComment({
               />
               <Typography
                 variant="body1"
-                style={{ color: "black", fontWeight: "bold" }}
+                style={{ color: 'black', fontWeight: 'bold' }}
               >
                 {user.fullName}
               </Typography>
@@ -120,10 +120,10 @@ export default function AddTopicComment({
           <div>
             <TextField
               style={{
-                margin: "auto",
+                margin: 'auto',
                 marginLeft: 10,
                 marginRight: 10,
-                backgroundColor: "white",
+                backgroundColor: 'white',
                 borderRadius: 15,
               }}
               id="outlined-basic"
@@ -136,14 +136,14 @@ export default function AddTopicComment({
           </div>
           <div style={{ marginLeft: 10, marginTop: 15, paddingBottom: 5 }}>
             <Button
-              style={{ fontSize: 10, fontWeight: "bold" }}
+              style={{ fontSize: 10, fontWeight: 'bold' }}
               variant="outlined"
               onClick={handleSend}
             >
               Nhận xét
             </Button>
             <Button
-              style={{ fontSize: 10, fontWeight: "bold" }}
+              style={{ fontSize: 10, fontWeight: 'bold' }}
               variant="outlined"
               onClick={handleAfterCreateTopicComment}
             >
