@@ -17,7 +17,7 @@ function Login(props) {
   useEffect(() => {
     const token = localStorage.getItem(APP_CONSTANTS.USER_TOKEN);
     if (token) {
-      history.replace("./admin");
+      history.replace("/admin");
     }
   });
 

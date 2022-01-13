@@ -8,7 +8,7 @@ import { Routes, Route, Link } from "react-router-dom";
 
 function UserList(props) {
   const [postList, setPostList] = useState([]);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
   const [pageSize] = useState(5);
   const [totalCount, setTotalCount] = useState(0);
   const [keyword, setKeyword] = useState("");
@@ -38,15 +38,17 @@ function UserList(props) {
         page: pg,
         pageSize: pgSize,
       };
-      const res = await axios.post(ENDPOINT.USERS_LIST, params);
+      const res = await axios.post(ENDPOINT.POST_LIST, params);
       console.log(res);
-      //   setPostList(res.data);
+      setPostList(res.data.result);
+      setTotalCount(res.data.numberOfResult);
+      setOffset(res.data.offset);
 
-      if (res.data) {
-        setPostList(res.data.result);
-        setTotalCount(res.data.numberOfResult);
-        setOffset(res.data.offset);
-      }
+      // if (res.data) {
+      //   setPostList(res.data.result);
+      //   setTotalCount(res.data.numberOfResult);
+      //   setOffset(res.data.offset);
+      // }
     } catch (error) {
       console.log("Call API Users List Error: ", error);
     }
@@ -281,13 +283,6 @@ function UserList(props) {
               </tbody>
             </table>
             <div className="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between">
-              <span className="text-xs xs:text-sm text-gray-900">
-                Showing {totalCount === 0 ? 0 : offset + 1} to{" "}
-                {offset + pageSize > totalCount
-                  ? totalCount
-                  : offset + pageSize}{" "}
-                of {totalCount} Records
-              </span>
               <div className="inline-flex mt-2 mt-0">
                 <button
                   className="text-sm bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-l"

@@ -63,6 +63,7 @@ const createPostConsumer = async () => {
   await consumer.run({
     eachMessage: async ({ topic, partition, message }) => {
       const postData = JSON.parse(message.value.toString());
+      console.log(postData);
       await Post.create(postData);
       console.log({ message: "Create post successfully" });
     },
@@ -82,8 +83,41 @@ const updatePostConsumer = async () => {
   await consumer.run({
     eachMessage: async ({ topic, partition, message }) => {
       const postData = JSON.parse(message.value.toString());
-      await Post.findByIdAndUpdate(postData._id, { $set: postData });
-      console.log({ message: "update post successfully" });
+      console.log(postData);
+
+      const updatePost = await Post.findOneAndUpdate(
+        { _id: postData._id },
+        {
+          title: postData.title,
+          description: postData.description,
+          content: postData.content,
+          author: postData.author,
+          image: postData.image,
+          category: postData.category,
+        },
+        { new: true }
+      );
+      console.log({ message: "Update post successfully" });
+    },
+  });
+};
+
+const deletePostConsumer = async () => {
+  const clientId = "query-delete-post";
+  const kafka = new Kafka({
+    clientId,
+    brokers,
+  });
+  const consumer = kafka.consumer({ groupId: clientId });
+  await consumer.connect();
+  await consumer.subscribe({ topic: "delete-post" });
+
+  await consumer.run({
+    eachMessage: async ({ topic, partition, message }) => {
+      const postData = JSON.parse(message.value.toString());
+      console.log(postData);
+      await Post.findOneAndDelete({ _id: postData });
+      console.log({ message: "Delete post successfully" });
     },
   });
 };
@@ -117,5 +151,6 @@ module.exports = {
   seedingAdminAccountConsumer,
   createPostConsumer,
   crawlNewsConsumer,
+  deletePostConsumer,
   updatePostConsumer,
 };

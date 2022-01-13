@@ -18,6 +18,23 @@ const createPostProducer = async (post) => {
   await producer.disconnect();
 };
 
+const deletePostProducer = async (post) => {
+  clientId = "delete-post-client-id";
+  const kafka = new Kafka({
+    clientId,
+    brokers,
+  });
+
+  const producer = await kafka.producer();
+
+  await producer.connect();
+  await producer.send({
+    topic: "delete-post",
+    messages: [{ value: JSON.stringify(post) }],
+  });
+  await producer.disconnect();
+};
+
 const updatePostProducer = async (post) => {
   clientId = "update-post-client-id";
   const kafka = new Kafka({
@@ -35,4 +52,4 @@ const updatePostProducer = async (post) => {
   await producer.disconnect();
 };
 
-module.exports = { createPostProducer, updatePostProducer };
+module.exports = { createPostProducer, deletePostProducer, updatePostProducer };

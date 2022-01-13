@@ -1,30 +1,30 @@
-import { Grid } from '@mui/material';
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import io from 'socket.io-client';
-import Header from 'src/components/Header/Header';
-import Comments from 'src/pages/Comments/Comments';
-import Topic from '../Topics/Topic';
-import ButtonHandle from './ButtonHandle';
-import './style.css';
+import { Grid } from "@mui/material";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import io from "socket.io-client";
+import Header from "src/components/Header/Header";
+import Comments from "src/pages/Comments/Comments";
+import Topic from "../Topics/Topic";
+import ButtonHandle from "./ButtonHandle";
+import "./style.css";
 
-const socket = io.connect('http://localhost:8900');
+const socket = io.connect("http://localhost:8900");
 
 export default function Details() {
   const { state } = useLocation();
-  const [des, setDes] = useState('');
-  const [description, setDescription] = useState('');
-  const [chooseTopic, setChooseTopic] = useState('');
+  const [des, setDes] = useState("");
+  const [description, setDescription] = useState("");
+  const [chooseTopic, setChooseTopic] = useState("");
   const [create, setCreate] = useState(false);
 
-  const user = JSON.parse(localStorage.getItem('user'));
+  const user = JSON.parse(localStorage.getItem("user"));
   useEffect(() => {
-    socket.emit('join-room-postId', { postId: state._id });
+    socket.emit("join-room-postId", { postId: state._id });
   }, [socket]);
 
   useEffect(() => {
-    socket.on('new-topic', (data) => {
+    socket.on("new-topic", (data) => {
       setDes(data.data);
     });
   }, [des]);
@@ -41,7 +41,7 @@ export default function Details() {
       (des || state.description).slice(0, start) +
       `<p style="background-color: #${randomColor}" class='topic'>` +
       (des || state.description).slice(start, end) +
-      '</p>' +
+      "</p>" +
       (des || state.description).slice(end);
 
     setDescription(newHtml);
@@ -50,7 +50,7 @@ export default function Details() {
   const handleUnderlineTopic = (contentData) => {
     let result = (des || state.description).replace(
       /; text-decoration: underline;/g,
-      ''
+      ""
     );
 
     const start = result.indexOf(contentData) - 16;
@@ -64,20 +64,12 @@ export default function Details() {
     setDes(newHtml);
   };
 
-  const handleClickToDescription = () => {
-    let result = (des || state.description).replace(
-      /; text-decoration: underline;/g,
-      ""
-    );
-    setDes(result);
-  };
-
   const handleUpdateNewsContent = async (data) => {
     await axios.put(`http://localhost:3001/update-post/${state._id}`, {
       description: data,
     });
     setDes(data);
-    socket.emit('add-topic', {
+    socket.emit("add-topic", {
       data,
     });
   };
@@ -100,7 +92,7 @@ export default function Details() {
   };
   const handleAfterCreateTopicComment = () => {
     setCreate(false);
-    setChooseTopic('');
+    setChooseTopic("");
   };
 
   return (
@@ -118,7 +110,7 @@ export default function Details() {
           <p
             onMouseUp={getText}
             dangerouslySetInnerHTML={{ __html: des || state.description }}
-            onClick={handleClickToDescription}
+            // className="topic"
           />
           <p>{state.author}</p>
         </Grid>

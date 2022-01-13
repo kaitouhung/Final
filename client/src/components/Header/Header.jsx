@@ -1,24 +1,24 @@
-import AppBar from '@mui/material/AppBar';
-import Avatar from '@mui/material/Avatar';
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
-import IconButton from '@mui/material/IconButton';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import Toolbar from '@mui/material/Toolbar';
-import Tooltip from '@mui/material/Tooltip';
-import Typography from '@mui/material/Typography';
-import * as React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
-import { path } from 'src/constants/path';
-import { unauthorize } from 'src/pages/Auth/auth.slice';
+import AppBar from "@mui/material/AppBar";
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import IconButton from "@mui/material/IconButton";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Toolbar from "@mui/material/Toolbar";
+import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
+import * as React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { path } from "src/constants/path";
+import { unauthorize } from "src/pages/Auth/auth.slice";
 
 export default function Header() {
   const profile = useSelector((state) => state.auth.profile);
   const avatar =
     profile?.avatar ||
-    'https://res.cloudinary.com/dn4nqzjpm/image/upload/v1642011504/users/ceqwv01nz6ewodzspvdn.png';
+    "https://res.cloudinary.com/dn4nqzjpm/image/upload/v1642011504/users/ceqwv01nz6ewodzspvdn.png";
 
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -54,10 +54,10 @@ export default function Header() {
             to={path.home}
             sx={{
               mr: 2,
-              display: { xs: 'none' },
-              textDecoration: 'none',
-              color: 'white',
-              curson: 'pointer',
+              display: { xs: "none" },
+              textDecoration: "none",
+              color: "white",
+              curson: "pointer",
             }}
           >
             F-TEAM
@@ -69,16 +69,16 @@ export default function Header() {
             to={path.home}
             sx={{
               flexGrow: 1,
-              display: { xs: 'flex' },
-              textDecoration: 'none',
-              color: 'white',
-              curson: 'pointer',
+              display: { xs: "flex" },
+              textDecoration: "none",
+              color: "white",
+              curson: "pointer",
             }}
           >
             F-TEAM
           </Typography>
           {!profile?._id && (
-            <Box sx={{ display: 'flex', justifyContent: 'flex-start' }}>
+            <Box sx={{ display: "flex", justifyContent: "flex-start" }}>
               <MenuItem component={Link} to={path.register}>
                 <Typography textAlign="center">Register</Typography>
               </MenuItem>
@@ -89,14 +89,14 @@ export default function Header() {
           )}
 
           {profile?._id && (
-            <Box sx={{ display: 'flex', justifyContent: 'flex-start' }}>
+            <Box sx={{ display: "flex", justifyContent: "flex-start" }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   <Avatar alt="Remy Sharp" src={avatar} />
                   <Typography
                     variant="h6"
                     component="h6"
-                    sx={{ color: 'white', ml: 2 }}
+                    sx={{ color: "white", ml: 2 }}
                   >
                     {profile.fullName}
                   </Typography>
@@ -104,17 +104,17 @@ export default function Header() {
               </Tooltip>
 
               <Menu
-                sx={{ mt: '45px' }}
+                sx={{ mt: "45px" }}
                 id="menu-appbar"
                 anchorEl={anchorElUser}
                 anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
+                  vertical: "top",
+                  horizontal: "right",
                 }}
                 keepMounted
                 transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
+                  vertical: "top",
+                  horizontal: "right",
                 }}
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}

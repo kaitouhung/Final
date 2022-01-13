@@ -1,12 +1,12 @@
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import React from 'react';
-import { format } from 'timeago.js';
-import InputTextarea from '../InputTextarea/InputTextarea';
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import React from "react";
+import { format } from "timeago.js";
+import InputTextarea from "../InputTextarea/InputTextarea";
 
 export default function Comment({
   comment,
@@ -32,12 +32,12 @@ export default function Comment({
 
   const isReplying =
     activeComment &&
-    activeComment.type === 'replying' &&
+    activeComment.type === "replying" &&
     activeComment._id === comment._id;
 
   const isEditing =
     activeComment &&
-    activeComment.type === 'editing' &&
+    activeComment.type === "editing" &&
     activeComment._id === comment._id;
 
   const replyId = parentId ? parentId : comment._id;
@@ -46,7 +46,7 @@ export default function Comment({
 
   const avatar =
     comment.userId.avatar ||
-    'https://res.cloudinary.com/dn4nqzjpm/image/upload/v1642011504/users/ceqwv01nz6ewodzspvdn.png';
+    "https://res.cloudinary.com/dn4nqzjpm/image/upload/v1642011504/users/ceqwv01nz6ewodzspvdn.png";
 
   const [open, setOpen] = React.useState(false);
 
@@ -104,7 +104,7 @@ export default function Comment({
             onClick={() => {
               setActiveComment({
                 _id: comment._id,
-                type: 'replying',
+                type: "replying",
               });
               // setReply({
               //   _id: comment._id,
@@ -120,7 +120,7 @@ export default function Comment({
               onClick={() => {
                 setActiveComment({
                   _id: comment._id,
-                  type: 'editing',
+                  type: "editing",
                 });
                 // setReply({
                 //   _id: comment._id,

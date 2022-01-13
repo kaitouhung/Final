@@ -5,9 +5,12 @@ const rootRouter = require("./routes");
 const cors = require("cors");
 const queryRouter = require("./routes/index.js");
 const {
+  updateUserStatusConsumer,
+  seedingAdminAccountConsumer,
   createPostConsumer,
-  crawlNewsConsumer,
   updatePostConsumer,
+  deletePostConsumer,
+  crawlNewsConsumer,
 } = require("./consumer");
 
 const {
@@ -23,16 +26,10 @@ const {
 } = require("./kafka-comment/comment.consumer");
 
 const { checkAuthenEvent } = require("./kafka-auth/auth.producer");
-const {
-  getTopicConsumer,
-  removeTopicConsumer,
-} = require("./consumer/topic.consumer.js");
+const { getTopicConsumer } = require("./consumer/topic.consumer.js");
 const {
   addTopicCommentConsumer,
-  removeTopicCommentConsumer,
-  removeATopicCommentConsumer,
 } = require("./consumer/topic-comment.consumer.js");
-const { AppError } = require("../../comment/src/utils/appError");
 
 const app = express();
 app.use(express.json());
@@ -85,11 +82,10 @@ app.listen(process.env.PORT, () => {
   // crawl
   // updateUserStatusConsumer();
   // seedingAdminAccountConsumer();
+  crawlNewsConsumer();
   createPostConsumer();
   updatePostConsumer();
-
-  crawlNewsConsumer();
-
+  deletePostConsumer();
   // auth
   signupEvent();
   // authenticateEvent();
@@ -103,10 +99,7 @@ app.listen(process.env.PORT, () => {
 
   //topic
   getTopicConsumer();
-  removeTopicConsumer();
 
   //comment
   addTopicCommentConsumer();
-  removeTopicCommentConsumer();
-  removeATopicCommentConsumer();
 });
