@@ -63,6 +63,14 @@ export default function Details() {
     setDes(newHtml);
   };
 
+  const handleClickToDescription = () => {
+    let result = (des || state.description).replace(
+      /; text-decoration: underline;/g,
+      ""
+    );
+    setDes(result);
+  };
+
   const handleUpdateNewsContent = async (data) => {
     await axios.put(`http://localhost:3001/update-post/${state._id}`, {
       description: data,
@@ -108,7 +116,7 @@ export default function Details() {
           <p
             onMouseUp={getText}
             dangerouslySetInnerHTML={{ __html: des || state.description }}
-            // className="topic"
+            onClick={handleClickToDescription}
           />
           <p>{state.author}</p>
         </Grid>
