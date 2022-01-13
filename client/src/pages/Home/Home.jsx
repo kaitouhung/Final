@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from "react";
-import MenuItem from "@mui/material/MenuItem";
-import axios from "axios";
-import http from "./../../utils/http.js";
-import News from "./News/News";
+import MenuItem from '@mui/material/MenuItem';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import Header from 'src/components/Header/Header.jsx';
+import News from './News/News';
 
 const styleMenuHeader = {
-  display: "flex",
+  display: 'flex',
   flex: 1,
-  justifyContent: "space-around",
+  justifyContent: 'space-around',
   marginBottom: 20,
 };
 
 export default function Home() {
   const [categorys, setCategorys] = useState([]);
-  const [chosenCategory, setChosenCategory] = useState("");
+  const [chosenCategory, setChosenCategory] = useState('');
   const [page, setPage] = useState(1);
   useEffect(() => {
     getCategorys();
@@ -44,6 +44,7 @@ export default function Home() {
 
   return (
     <div>
+      <Header />
       <div style={styleMenuHeader}>
         <RenderCategory />
       </div>

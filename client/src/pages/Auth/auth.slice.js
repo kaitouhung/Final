@@ -24,6 +24,16 @@ export const uploadAvatar = createAsyncThunk(
   payloadCreator(userApi.uploadAvatar)
 );
 
+export const forgot = createAsyncThunk(
+  'auth/forgot',
+  payloadCreator(authApi.forgot)
+);
+
+export const reset = createAsyncThunk(
+  'auth/reset',
+  payloadCreator(authApi.reset)
+);
+
 const handleAuthFulfilled = (state, action) => {
   const { data, token } = action.payload;
   state.profile = data;

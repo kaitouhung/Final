@@ -90,6 +90,7 @@ const forgotPassword = async (req, res, next) => {
   let user = null;
   try {
     const { email } = req.body;
+    console.log(email);
     user = await User.findOne({ email });
     if (!user) {
       return next(new AppError('Email is invalid', 400));
@@ -98,7 +99,8 @@ const forgotPassword = async (req, res, next) => {
     const resetToken = user.createPasswordResetToken();
     await user.save();
 
-    const resetURL = `${process.env.BASE_URL}/api/v1/users/resetPassword/${resetToken}`;
+    const resetURL = `http://localhost:3000/reset/${resetToken}`;
+    // console.log(resetURL);
     await mailService.sendMailToUser(
       user.email,
       'Reset Password',
@@ -115,7 +117,7 @@ const forgotPassword = async (req, res, next) => {
     user.passwordResetExpires = undefined;
     await user.save();
 
-    return next(new AppError('ForgotPassword fail'), 500);
+    return next(new AppError(error.message), 500);
   }
 };
 
@@ -137,6 +139,7 @@ const resetPassword = async (req, res, next) => {
     user.passwordConfirm = req.body.passwordConfirm;
     user.passwordResetToken = undefined;
     user.passwordResetExpires = undefined;
+    console.log(user);
     await user.save();
     user.password = undefined;
 

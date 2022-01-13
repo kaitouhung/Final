@@ -25,6 +25,7 @@ export default function Comment({
   // const timePassed = new Date() - new Date(comment.createdAt) > 300000;
   // const canReply = Boolean(currentUserId);
   // const canModify = currentUserId === comment.userId._id && !timePassed;
+
   const canModify = currentUserId === comment.userId._id;
 
   const createdAt = format(comment.createdAt);
@@ -45,7 +46,7 @@ export default function Comment({
 
   const avatar =
     comment.userId.avatar ||
-    'https://res.cloudinary.com/mern-itachi/image/upload/v1641222036/users/hxc8yfsq3eb92efff7vs.png';
+    'https://res.cloudinary.com/dn4nqzjpm/image/upload/v1642011504/users/ceqwv01nz6ewodzspvdn.png';
 
   const [open, setOpen] = React.useState(false);
 
@@ -207,7 +208,7 @@ export default function Comment({
           open={open}
           onClose={handleClose}
           disableEscapeKeyDown
-          // onBackdropClick={() => setOpen(false)}
+          // onBackdropClick={handleClickOpen}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >

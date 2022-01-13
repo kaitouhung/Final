@@ -12,16 +12,15 @@ import { unwrapResult } from '@reduxjs/toolkit';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Background from 'src/assets/img/login_register.jpg';
-import InputPassword from 'src/components/InputPassword/InputPassword';
 import InputText from 'src/components/InputText/InputText';
 import { path } from 'src/constants/path';
 import * as yup from 'yup';
-import { login } from '../auth.slice';
+import { forgot } from '../auth.slice';
 
-export default function Login() {
+export default function Forgot() {
   const schema = yup
     .object({
       email: yup
@@ -29,12 +28,6 @@ export default function Login() {
         .trim('Please enter your email')
         .required('Please enter your email.')
         .email('Please enter a valid email address.'),
-      password: yup
-        .string()
-        .trim('Please enter your passowrd')
-        .required('Please enter your password')
-        .min(6, 'Please enter at least 6 character')
-        .max(160, 'Please enter lesser 160 character'),
     })
     .required();
 
@@ -43,34 +36,33 @@ export default function Login() {
     handleSubmit,
     formState: { errors },
     setError,
+    reset,
   } = useForm({
     defaultValues: {
       email: '',
-      password: '',
     },
     resolver: yupResolver(schema),
   });
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
-  const handleLogin = async (data) => {
+  const handleForgot = async (data) => {
     const body = {
       email: data.email,
-      password: data.password,
     };
 
     try {
-      const res = await dispatch(login(body));
+      console.log(body);
+      const res = await dispatch(forgot(body));
       unwrapResult(res);
-      toast.success('Login successfully', {
+      reset();
+      toast.success('Email will be sent to you', {
         position: 'top-right',
         autoClose: 3000,
       });
-      navigate(path.home);
     } catch (error) {
-      if (error.status === 403) {
-        setError('password', {
+      if (error.status === 400) {
+        setError('email', {
           type: 'server',
           message: error.message,
         });
@@ -111,13 +103,13 @@ export default function Login() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Forgot Password
           </Typography>
           <Box
             component="form"
             noValidate
             sx={{ mt: 1, width: 1 }}
-            onSubmit={handleSubmit(handleLogin)}
+            onSubmit={handleSubmit(handleForgot)}
           >
             <InputText
               control={control}
@@ -126,34 +118,18 @@ export default function Login() {
               errors={errors}
             />
 
-            <InputPassword
-              control={control}
-              name="password"
-              label="Password"
-              errors={errors}
-            />
             <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign In
+              Forgot
             </Button>
             <Grid container>
               <Grid item>
-                <MuiLink component={Link} to={path.register} variant="body2">
-                  {'You have an account? Sign Up'}
-                </MuiLink>
-              </Grid>
-              <Grid item>
-                <MuiLink
-                  component={Link}
-                  to={path.forgot}
-                  variant="body2"
-                  sx={{ ml: 12 }}
-                >
-                  {'Forgot Password'}
+                <MuiLink component={Link} to={path.login} variant="body2">
+                  {'Login'}
                 </MuiLink>
               </Grid>
             </Grid>

@@ -8,33 +8,31 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import { unwrapResult } from '@reduxjs/toolkit';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Background from 'src/assets/img/login_register.jpg';
 import InputPassword from 'src/components/InputPassword/InputPassword';
-import InputText from 'src/components/InputText/InputText';
 import { path } from 'src/constants/path';
+import Http from 'src/utils/http';
 import * as yup from 'yup';
-import { login } from '../auth.slice';
-
-export default function Login() {
+export default function Reset() {
   const schema = yup
     .object({
-      email: yup
-        .string()
-        .trim('Please enter your email')
-        .required('Please enter your email.')
-        .email('Please enter a valid email address.'),
       password: yup
         .string()
         .trim('Please enter your passowrd')
         .required('Please enter your password')
         .min(6, 'Please enter at least 6 character')
         .max(160, 'Please enter lesser 160 character'),
+      passwordConfirm: yup
+        .string()
+        .trim('Please enter your password confirm')
+        .required('Please enter your password confirm')
+        .min(6, 'Please enter at least 6 character')
+        .max(160, 'Please enter lesser 160 character')
+        .oneOf([yup.ref('password')], 'Password does not match'),
     })
     .required();
 
@@ -43,38 +41,39 @@ export default function Login() {
     handleSubmit,
     formState: { errors },
     setError,
+    reset,
   } = useForm({
     defaultValues: {
-      email: '',
       password: '',
+      passwordConfirm: '',
     },
     resolver: yupResolver(schema),
   });
 
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const { resetPassword } = useParams();
 
-  const handleLogin = async (data) => {
+  const handleReset = async (data) => {
     const body = {
-      email: data.email,
       password: data.password,
+      passwordConfirm: data.passwordConfirm,
     };
 
     try {
-      const res = await dispatch(login(body));
-      unwrapResult(res);
-      toast.success('Login successfully', {
+      const res = await new Http(process.env.REACT_APP_API_Auth).patch(
+        `resetPassword/${resetPassword}`,
+        body
+      );
+
+      reset();
+      toast.success('Reset Password successfully', {
         position: 'top-right',
         autoClose: 3000,
       });
-      navigate(path.home);
     } catch (error) {
-      if (error.status === 403) {
-        setError('password', {
-          type: 'server',
-          message: error.message,
-        });
-      }
+      toast.error('Reset unsuccessful', {
+        position: 'top-right',
+        autoClose: 3000,
+      });
     }
   };
 
@@ -111,49 +110,40 @@ export default function Login() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Reset Password
           </Typography>
           <Box
             component="form"
             noValidate
             sx={{ mt: 1, width: 1 }}
-            onSubmit={handleSubmit(handleLogin)}
+            onSubmit={handleSubmit(handleReset)}
           >
-            <InputText
-              control={control}
-              name="email"
-              label="Email"
-              errors={errors}
-            />
-
             <InputPassword
               control={control}
               name="password"
               label="Password"
               errors={errors}
             />
+
+            <InputPassword
+              control={control}
+              name="passwordConfirm"
+              label="Confirm Password"
+              errors={errors}
+            />
+
             <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign In
+              Reset Password
             </Button>
             <Grid container>
               <Grid item>
-                <MuiLink component={Link} to={path.register} variant="body2">
-                  {'You have an account? Sign Up'}
-                </MuiLink>
-              </Grid>
-              <Grid item>
-                <MuiLink
-                  component={Link}
-                  to={path.forgot}
-                  variant="body2"
-                  sx={{ ml: 12 }}
-                >
-                  {'Forgot Password'}
+                <MuiLink component={Link} to={path.login} variant="body2">
+                  {'Login'}
                 </MuiLink>
               </Grid>
             </Grid>
